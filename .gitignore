@@ -1,0 +1,7 @@
+Pipfile.lock
+node_modules/
+
+venv/
+.venv/
+
+docs/**/*.png
