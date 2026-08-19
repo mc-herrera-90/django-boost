@@ -1,0 +1,14 @@
+# Reglas de Markdownlint:
+# https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md
+
+MD022: true
+MD013: false
+MD041: false
+
+MD049:
+  style: asterisk
+
+MD050:
+  style: asterisk
+
+MD046: false
