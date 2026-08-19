@@ -1,0 +1,77 @@
+site_name: Django Boost
+
+extra_css:
+  - assets/css/nerd-font.css
+  - assets/css/post.css
+
+extra_javascript:
+  - assets/js/libs/sweetalert2.min.js
+  - assets/js/generate-project.js
+  - assets/js/post-zoom.js
+  - assets/js/extras.js
+
+theme:
+  name: material
+  custom_dir: overrides
+  language: es
+
+  icon:
+    logo: fontawesome/solid/d
+
+  font:
+    text: Exo
+    code: JetBrains Mono
+  
+  palette:
+    # Light mode
+    - scheme: default
+      primary: teal
+      accent: teal
+      toggle:
+        icon: material/brightness-7
+        name: Cambiar a modo oscuro
+
+    # Dark mode
+    - scheme: slate
+      primary: teal
+      accent: teal
+      toggle:
+        icon: material/brightness-4
+        name: Cambiar a modo claro
+
+  features:
+    - navigation.tabs
+    - navigation.instant
+    - navigation.instant.prefetch
+    - navigation.tracking
+    - content.code.copy
+
+markdown_extensions:
+  - abbr
+  - attr_list
+  - md_in_html
+  - admonition
+  - pymdownx.details
+  - pymdownx.snippets
+  - pymdownx.keys
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - toc:
+      permalink: true
+  - pymdownx.tabbed:
+      alternate_style: true
+
+plugins:
+  - search
+  - blog:
+      post_date_format: short # long | medium | short
+      post_url_format: "{slug}"
+      archive: false
+
+copyright: Copyright &copy; 2024 @mcherrera
