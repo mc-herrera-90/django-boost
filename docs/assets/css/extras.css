@@ -1,0 +1,236 @@
+/* — Título principal — */
+.md-content h1 {
+  text-align: center;
+  overflow: hidden;
+  white-space: nowrap;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto 2rem;
+  color: var(--md-primary-fg-color);
+  font-weight: 600;
+  animation: typing 1s steps(30, end) both;
+}
+
+.md-content h1.typing-complete {
+  overflow: visible;
+  white-space: normal;
+}
+
+@keyframes typing {
+  from {
+    max-width: 0;
+  }
+
+  to {
+    max-width: 100%;
+  }
+}
+
+/* — Títulos de sección — */
+.md-content h2 {
+  margin-bottom: 1.2rem;
+  padding-left: 0.85rem;
+  font-weight: 700;
+  transition: color 0.2s ease;
+}
+
+/* Acento vertical */
+.md-content h2::before {
+  content: "";
+
+  position: absolute;
+  left: 0;
+  top: 0.18em;
+
+  width: 3px;
+  height: calc(100% - 0.36em);
+
+  border-radius: 3px;
+
+  background: var(--md-primary-fg-color);
+
+  opacity: 0.65;
+
+  transform: scaleY(0.85);
+  transform-origin: center;
+
+  transition:
+    transform 0.25s ease,
+    opacity 0.25s ease;
+}
+
+
+/* Hover del título */
+.md-content h2:hover::before {
+  opacity: 1;
+  transform: scaleY(1);
+}
+
+
+.md-content p {
+    font-size: 18px;
+    text-align: justify;
+}
+
+
+/* =========================================================
+   Entrada del título
+   ========================================================= */
+
+.md-content h2 {
+  animation: section-title-in 0.35s ease both;
+}
+
+@keyframes section-title-in {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.swal-md-button {
+  display: inline-block;
+  padding: 0.625em 1.25em;
+
+  border: 0;
+  border-radius: 0.2rem;
+
+  background-color: var(--md-primary-fg-color);
+  color: var(--md-primary-bg-color);
+
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.swal-md-button:hover {
+  background-color: var(--md-primary-fg-color--dark);
+}
+
+.swal-md-button:focus {
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem var(--md-primary-fg-color--light);
+}.swal-md-button {
+  display: inline-block;
+  padding: 0.625em 1.25em;
+
+  border: 0;
+  border-radius: 0.2rem;
+
+  background-color: var(--md-primary-fg-color);
+  color: var(--md-primary-bg-color);
+
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.swal-md-button:hover {
+  background-color: var(--md-primary-fg-color--dark);
+}
+
+.swal-md-button:focus {
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem var(--md-primary-fg-color--light);
+}
+
+.md-modal {
+    background-color: var(--md-default-bg-color);
+    color: var(--md-default-fg-color);
+}
+
+.md-modal .swal2-input-label {
+  color: var(--md-default-fg-color--light);
+}
+
+/* TABS */
+.tabbed-set {
+    border: 1px solid var(--md-default-fg-color--lightest);
+}
+
+.tabbed-set blockquote,
+.tabbed-set .admonition
+ {
+    border: none !important;
+    margin: 0;
+}
+
+
+.font-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: .3rem;
+  margin-bottom: .5rem;
+  padding: 0.25rem;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 0.3rem;
+  width: fit-content;
+  background-color: var(--md-default-bg-color);
+}
+
+.font-controls span {
+  margin: 0 0.5rem 0 0.25rem;
+  color: var(--md-default-fg-color--light);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.font-controls button {
+  min-width: 2rem;
+  height: 2rem;
+  padding: 0 0.45rem;
+
+  border: 0;
+  border-radius: 0.2rem;
+
+  background-color: transparent;
+  color: var(--md-default-fg-color);
+
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 700;
+
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.font-controls button:hover {
+  background-color: var(--md-accent-fg-color);
+  color: var(--md-accent-bg-color);
+}
+
+.font-controls button:focus-visible {
+  outline: 2px solid var(--md-accent-fg-color);
+  outline-offset: 2px;
+}
+
+.font-controls button:active {
+  transform: translateY(1px);
+}
+/* .md-content--post .md-typeset {
+  font-size: var(--post-font-size, 100%);
+} */
+
+.md-content--post .md-content__inner {
+  zoom: var(--post-zoom, 1);
+}
