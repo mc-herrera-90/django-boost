@@ -4,3 +4,7 @@
 	font-style: normal;
 	src: url("../fonts/Meslo.ttf");
 }
+
+pre, code {
+  font-family: "JetBrains Mono", Nerd;
+}
