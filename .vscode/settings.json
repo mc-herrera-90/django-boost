@@ -1,3 +1,15 @@
 {
-    "markdownlint.run": "onSave"
+    "[markdown]": {
+        "editor.insertSpaces": true,
+        "editor.tabSize": 4
+    },
+
+    "[plaintext]": {
+        "files.insertFinalNewline": false,
+        "files.trimFinalNewlines": true
+    },
+
+    "markdownlint.run": "onSave",
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": true
 }
