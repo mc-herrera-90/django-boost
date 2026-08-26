@@ -15,7 +15,7 @@ authors:
     El **Shell de Django** es una herramienta esencial durante la etapa de desarrollo y depuración de tus proyectos. Permite acceder directamente al ORM y a los QuerySets para realizar consultas y trabajar con la base de datos.
 <!-- more -->
 
-## ¿Qué es Django Shell
+## ¿Qué es Django Shell?
 
 El **shell de Django** es una interfaz de línea de comandos interactiva que combina el intérprete de Python con las funcionalidades de Django. Al iniciarlo, carga automáticamente la configuración del proyecto, permitiendo trabajar directamente con sus aplicaciones y modelos.
 
@@ -25,18 +25,15 @@ Django utiliza **Python** como intérprete interactivo por defecto. Sin embargo,
 
 ## Accediendo al Shell de Django
 
-Para acceder al shell de Django, solo necesitas ejecutar el comando `shell` en un proyecto de Django. Es necesario tener un proyecto de Django configurado y en marcha, si quieres comenzar a configurar un proyecto desde cero, utiliza la herramienta __Generar Nuevo Proyecto__.
+Para acceder al shell de Django, solo necesitas ejecutar el comando `shell` en un proyecto de Django. Es necesario tener un proyecto de Django configurado y en marcha, si quieres comenzar a configurar un proyecto desde cero, sigue las instrucciones para **la plataforma** correspondiente.
 
---8<-- "includes/generador.html"
+## Nuevo proyecto
+
+--8<-- "snippets/nuevo-proyecto.md"
 
 Una vez generado el proyecto, tendrás disponible el archivo `manage.py` en el proyecto:
 
-```{ .plaintext .no-copy hl_lines="3" title="Archivos del proyecto" }
- .
-├──  venv
-├──  manage.py
-...
-```
+--8<-- "snippets/archivos-del-proyecto-starproject.md"
 
 Ahora, podemos ejecutar el siguiente comando para ingresar al shell de Django:
 
@@ -48,433 +45,452 @@ Podemos observar como entra en modo interactivo, invitandonos a escribir nuevas 
 
 --8<-- "includes/snippets/shell-django-welcome.md"
 
-
-
 ???+ info
-	Para salir del modo interactivo, debes escribir `exit()` o con la combinación de teclas ++ctrl+d++
+    Para salir del modo interactivo, debes escribir `exit()` o con la combinación de teclas ++ctrl+d++
 
+## ¿Qué es un ORM?
 
-## **Conceptos de  ORM de Django**
+Un **ORM (Object-Relational Mapping)** es una técnica que permite interactuar con bases de datos relacionales mediante objetos y código del lenguaje de programación, evitando escribir SQL directamente. **Django ORM** implementa este enfoque en Python, permitiendo **crear, consultar, actualizar y eliminar** registros mediante modelos y métodos.
 
-### **¿Qué es Django ORM?**
+Sus componentes principales son:
 
-Django ORM (Object-Relational Mapping) es una potente herramienta que permite interactuar con una base de datos relacional mediante código Python. Con Django ORM, podemos crear, recuperar, actualizar y eliminar registros en la base de datos mediante objetos y métodos Python. 
+**Modelos :material-table:**
+:   Clases de Python que representan las tablas de la base de datos. Sus atributos representan las columnas y heredan de `models.Model`.
 
-<div align="center" class="mermaid-container">
-<div class="mermaid-title">Funcionamiento de un ORM</div>
-```mermaid
-graph TD
-    A[Aplicación Django] --> B[ORM]
-    B --> C[Base de Datos]
-    B -->|Genera consultas| C
-    A -->|Interacción| B
+**Managers :material-cog:**
+:   Interfaces que permiten acceder a los modelos y construir consultas sobre sus datos. El manager predeterminado es `objects`.
+
+**QuerySets :material-filter:**
+:   Representan consultas sobre los datos de un modelo y permiten **filtrar, ordenar y manipular** registros. Son **perezosos**: métodos como `filter()` construyen la consulta sin ejecutarla inmediatamente. Esta se ejecuta cuando el `QuerySet` es evaluado, por ejemplo, al **iterarlo o convertirlo en una lista**.
+
+???- info "Funcionamiento del ORM de Django"
+    ```mermaid
+    --8<-- "snippets/diagramas/funcionamiento-del-orm-de-django.mmd"
+    ```
+
+## Crear una aplicación
+
+Antes de profundizar en el **Shell de Django** y los **QuerySets del ORM**, debemos crear una aplicación que nos permita definir modelos y realizar operaciones sobre la base de datos.
+
+Asumiendo que ya tienes el proyecto generado siguiendo las [instrucciones](#nuevo-proyecto), podemos crear la aplicación `products` utilizando el archivo `manage.py`:
+
+```bash title="Terminal"
+python manage.py startapp products
 ```
+
+Esto creará la estructura inicial de la aplicación, donde posteriormente definiremos nuestro modelo y comenzar a trabajar con él desde el Shell de Django.
+
+## Crear un modelo
+
+Ahora podemos definir un modelo abriendo el archivo `products/models.py` y definir el siguiente modelo:
+
+<div class="grid first-grid cards" markdown>
+
+```py title="products/models.py" linenums="1"
+from django.db import models
+
+
+class Product(models.Model):
+
+    name = models.CharField(max_length=50)
+    category = models.CharField(max_length=30)
+    price = models.IntegerField()
+    stock = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.name
+```
+
+```{ .plaintext .no-copy hl_lines="8" title="Abrir el Modelo" }
+ ...
+├──  _site
+└──  products/
+    ├──  migrations/
+    ├──  __init__.py
+    ├──  admin.py
+    ├──  apps.py
+    ├──  models.py
+    ├──  tests.py
+    └──  views.py
+```
+
 </div>
 
+## Registrar la aplicación
 
-### **¿Qué son los QuerySets?**
+Luego debemos abrir el archivo `_mysite/settings.py` y registrar la app generada:
 
-Un QuerySet es una colección de objetos de base de datos que se pueden filtrar, ordenar y segmentar para limitar los resultados a un subconjunto específicos. En pocas palabras, un QuerySet es una colección de registros que cumplen con ciertas condiciones definidas en una consulta, pero no necesariamente se ejecuta inmediatamente contra la base de datos hasta que se necesita (esto se llama **lazy evaluation** o evaluación perezosa).
+<div class="grid first-grid cards" markdown>
 
-<div align="center" class="mermaid-container">
-<div class="mermaid-title">Funcionamiento de los QuerySet</div>
-```mermaid
-graph TD
-    A[Crear QuerySet] --> B{¿Operación?}
-    B -->|Sí| C[Ejecutar consulta a la DB]
-    B -->|No| D[QuerySet perezoso]
-    C --> E[Devolver resultados]
-    D --> E
-```
-</div>
-
-Antes de profundizar más en el shell de Django y los QuerySets del ORM, debemos crear una aplicación para poder definir un modelo y realizar operaciones en la base de datos.
-
-Asumiendo que ya en este punto, tienes el proyecto generado siguiendo los pasos usando el [generador](#generador), continuamos con la configuración de una aplicación usando el archivo `manage.py`:
-
-```bash title="terminal"
-python manage.py startapp fruits
-```
-
-Ahora podemos definir un modelo abriendo el archivo `fruits/models.py` y definir el siguiente modelo:
-
-=== "Modelo"
-	```py title="fuits/models.py" linenums="1"
-	from django.db import models
-	
-	class FruitsInfo(models.Model):
-	
-		name = models.CharField(max_length=30)
-		origin = models.CharField(max_length=60)
-		protein = models.DecimalField(max_digits=4, null=False, decimal_places=2)
-		energy = models.IntegerField(default=0)
-	
-		def __str__(self):
-			return self.origin + " " + self.name
-	```
-
-=== "Explorador"
-	
-	```{ .plaintext hl_lines="9" .no-copy }
-	 .
-	├──  manage.py
-	├──  fruits
-	│   ├──  __init__.py
-	│   ├──  admin.py
-	│   ├──  apps.py
-	│   ├──  migrations
-	│   │   └──  __init__.py
-	│   ├──  models.py
-	│   ├──  tests.py
-	│   └──  views.py
-	└──  _site
-	```
-
-Luego debemos abrir el archivo `mysite/settings.py` y registrar la app generada:
-
-!!! tree inline end "Explorador"
-
-	```plaintext hl_lines="7"
-	 .
-	├──  manage.py
-	├──  fruits
-	└──  _site
-    	├──  __init__.py
-    	├──  asgi.py
-    	├──  settings.py
-    	├──  urls.py
-    	└──  wsgi.py
-	```
-```py title="settings.py" hl_lines="8" linenums="33"
+```py title="_site/settings.py" hl_lines="8" linenums="33"
 INSTALLED_APPS = [
-	'django.contrib.admin',
-	'django.contrib.auth',
-	'django.contrib.contenttypes',
-	'django.contrib.sessions',
-	'django.contrib.messages',
-	'django.contrib.staticfiles',
-	'fruits'
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'products'
 ]
 ```
+
+```{ .plaintext .no-copy hl_lines="5" title="Abrir el archivo settings" }
+ ...
+└──  _site
+    ├──  __init__.py
+    ├──  asgi.py
+    ├──  settings.py
+    ├──  urls.py
+    └──  wsgi.py
+```
+
+</div>
+
+Con esto, Django reconocerá `products` como una aplicación perteneciente al proyecto.
+
+## Aplicar las migraciones
 
 Luego generamos una nueva migración con el comando `makemigrations` y corremos las migraciones pendientes con el comando `migrate`:
 
 === "Comandos"
-	```bash title="Terminal"
-	python manage.py makemigrations #(1)!
-	python manage.py migrate #(2)!
-	```
-	
-	1. Genera una nueva migración que incluirá al modelo `FruitsInfo` definido anteriormente.
-	2. Ejecuta las migraciones pendiente y crea las tablas en la base de datos.
+    ```bash
+    python manage.py makemigrations #(1)!
+    python manage.py migrate #(2)!
+    ```
+
+    1. Genera una nueva migración que incluirá al modelo `Product` definido anteriormente.
+    2. Ejecuta las migraciones pendiente y crea las tablas en la base de datos.
 
 === "Output"
 
-	```plaintext hl_lines="1 5"
-	(venv) ➜ python manage.py makemigrations
-	Migrations for 'fruits':
-		fruits/migrations/0001_initial.py
-			- Create model FruitsInfo
-	(venv) ➜ python manage.py makemigrations
-	Operations to perform:
-		Apply all migrations: admin, auth, contenttypes, fruits, sessions
-	Running migrations:
-		Applying contenttypes.0001_initial... OK
-		Applying auth.0001_initial... OK
-		Applying admin.0001_initial... OK
-		Applying admin.0002_logentry_remove_auto_add... OK
-		Applying admin.0003_logentry_add_action_flag_choices... OK
-		Applying contenttypes.0002_remove_content_type_name... OK
-		Applying auth.0002_alter_permission_name_max_length... OK
-		Applying auth.0003_alter_user_email_max_length... OK
-		Applying auth.0004_alter_user_username_opts... OK
-		Applying auth.0005_alter_user_last_login_null... OK
-		Applying auth.0006_require_contenttypes_0002... OK
-		Applying auth.0007_alter_validators_add_error_messages... OK
-		Applying auth.0008_alter_user_username_max_length... OK
-		Applying auth.0009_alter_user_last_name_max_length... OK
-		Applying auth.0010_alter_group_name_max_length... OK
-		Applying auth.0011_update_proxy_permissions... OK
-		Applying auth.0012_alter_user_first_name_max_length... OK
-		Applying fruits.0001_initial... OK
-		Applying sessions.0001_initial... OK
-	(venv) ➜ django_project
-	```
+    ```{ .plaintext .no-copy hl_lines="1 5" }
+    --8<-- "snippets/outputs/products.0001_initial.txt"
+    ```
 
+Con esto, Django crea en **SQLite** la tabla correspondiente al modelo `Product`, dejándola lista para trabajar.
 
+## Operaciones ORM en el shell
 
-## **Operaciones ORM en el shell**
+Ahora podemos comenzar a realizar operaciones con el modelo `Product` desde el **Shell de Django**:
 
-Ahora para comenzar a realizar operaciones, vamos a ingresar al shell como lo vimos anteriormente:
+=== "Comando"
+    ```bash title="Terminal"
+    python manage.py shell
+    ```
 
-```bash title="terminal"
-python manage.py shell
+=== "Output"
+    --8<-- "includes/snippets/shell-django-welcome.md"
+
+### :octicons-diff-added-16: Insertar
+
+En Django, una **clase definida como modelo** que **hereda de `models.Model`** representa una tabla de la base de datos una vez que se han aplicado las migraciones, mientras que una instancia de esa clase representa un registro particular dentro de ella. Al crear y guardar una instancia, estamos realizando una operación equivalente a una sentencia [`INSERT`](https://en.wikipedia.org/wiki/Insert_%28SQL%29) en SQL.
+
+El ORM de Django proporciona **dos métodos principales para insertar registros de forma individual**. Uno permite crear y guardar el registro mediante una **instancia del modelo**, mientras que el otro utiliza el **manager `objects`** para crearlo directamente.
+
+#### :octicons-check-circle-16: Método `save()`
+
+Podemos crear un registro **instanciando la clase del modelo** y proporcionando los valores mediante argumentos de palabras clave. Luego, debemos llamar al método `save()` para guardar la instancia y confirmar el nuevo registro en la base de datos.
+
+En el siguiente ejemplo, veremos cómo agregar un nuevo registro al modelo `Product`:
+
+!!! example "Ejemplo: inserción exitosa con `save()`"
+
+    === ":octicons-code-16: Código Python"
+
+        ```py hl_lines="3 4"
+        from products.models import Product #(1)!
+
+        producto = Product(name="Notebook", category="Electrónica", price=899990, stock=10) #(2)!
+        producto.save() #(3)!
+        ```
+
+        1. Importamos la clase del modelo `Product`
+        2. Instanciamos la clase y la almacenamos en una variable
+        3. Invocamos al método `save()` para insertar el producto en la base de datos
+
+    === ":octicons-terminal-16: Shell Django"
+
+        ```{ .python .no-copy hl_lines="1 5 7 8" }
+        --8<-- "snippets/outputs/products.save.txt"
+        ```
+
+<div class="grid cards" markdown>
+
+!!! success "Resultado"
+
+    Si al ejecutar `save()` no se muestra ningún error en la Shell de Django, significa que el registro se guardó correctamente en la base de datos.
+
+!!! tip "Consejo"
+
+    El método `save()` es útil cuando necesitamos **trabajar con la instancia antes de guardarla**, por ejemplo, para realizar validaciones o modificar sus valores.
+    
+</div>
+
+#### :octicons-plus-circle-16: Método `create()`
+
+Otra forma de insertar un registro en el modelo `Product` es mediante el método `create()` de su **manager `objects`**. Este método crea y guarda directamente el registro en la base de datos, por lo que no es necesario llamar a `save()` por separado.
+
+El siguiente ejemplo muestra su uso:
+
+!!! example "Ejemplo: inserción exitosa con `create()`"
+
+    === ":octicons-code-16: Código Python"
+
+        ```py hl_lines="3"
+        from products.models import Product
+
+        Product.objects.create(name="Teclado", category="Periféricos", price=34990, stock=15)
+        ```
+
+    === ":octicons-terminal-16: Shell Django"
+
+        ```{ .python .no-copy hl_lines="1 5 7 8" }
+        --8<-- "snippets/outputs/products.objects.create.txt"
+        ```
+
+<div class="grid cards" markdown>
+
+!!! success "Resultado"
+
+    Si observamos el resultado en la Shell, `create()` retorna la **instancia de `Product`** que acabamos de insertar. En este caso, `<Product: Teclado>` corresponde al objeto creado.
+
+!!! tip "Consejo"
+
+    El método `create()` es útil cuando queremos **crear y guardar un registro directamente**, sin necesidad de instanciar el modelo y llamar a `save()` por separado.
+
+</div>
+
+### :octicons-stack-16: Insertar múltiples registros
+
+Ahora veremos cómo insertar **varios registros relacionados con `Product`**. Para ello, crearemos un nuevo modelo `Supplier` que nos permitirá representar los proveedores de los productos.
+
+Creamos la clase `Supplier` dentro de :octicons-file-code-16: `models.py` en la aplicación:
+
+<div class="grid first-grid cards" markdown>
+
+```{ .py title="products/models.py" linenums="15" }
+class Supplier(models.Model):
+
+    name = models.CharField(max_length=50)
+    email = models.EmailField()
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
 ```
 
-### **Insertar :octicons-diff-added-16:**
+```{ .plaintext .no-copy hl_lines="8" title="Abrir el Modelo" }
+ ...
+├──  _site
+└──  products/
+    ├──  migrations/
+    ├──  __init__.py
+    ├──  admin.py
+    ├──  apps.py
+    ├──  models.py
+    ├──  tests.py
+    └──  views.py
+```
 
-En Django, una clase modelo representa una tabla de base de datos y una instancia de esa clase representa un registro particular dentro de la base de datos. Esto es análogo a usar una sentencia [`INSERT` en SQL](https://en.wikipedia.org/wiki/Insert_(SQL)).
+</div>
 
+En la nueva clase `Supplier`, hemos definido los campos necesarios para representar a un proveedor y la hemos relacionado con el modelo `Product` mediante una llave foránea. De esta forma, cada proveedor queda asociado a un producto determinado. Además, definimos el método `__str__()` para representar el proveedor mediante su nombre.
 
-#### Método `save()`
+Generamos una nueva migración y la aplicamos a la base de datos con el comando `migrate`:
 
-Se puede crear un registro simplemente instanciando la clase definida en el modelo usando los argumentos de palabras claves, luego debemos llamar al método `save()` y así confirmar el nuevo registro en la base de datos.
+=== "Comandos"
 
-En el siguiente ejemplo, veremos que sencillo es agregar un nuevo registro a la clase del modelo:
+    ```bash
+    python manage.py makemigrations
+    python manage.py migrate
+    ```
 
-=== ":octicons-code-16: python"
+=== "Output"
 
-	```py  hl_lines="3"
-	from fruits.models import FruitsInfo #(1)!
-	record = FruitsInfo(name="banana", origin="USA", protein=1.09, energy=371) #(2)!
-	record.save() # (3)!
-	```
+    ```{ .plaintext .no-copy hl_lines="1 5" }
+    --8<-- "snippets/outputs/products.0002_supplier.txt"
+    ```
 
-	1. Importamos la clase del modelo
-	2. Instanciamos la clase y la almacenamos en una variable
-	3. invocamos al método `save()` para insertar en la base de datos
+#### :octicons-plus-circle-16: Método `bulk_create()`
 
-=== ":octicons-terminal-16: shell python"
+Ahora podemos volver a la Shell de Django e insertar múltiples registros en el modelo `Supplier` utilizando el método `bulk_create()`. Como el campo `product` es obligatorio, primero obtenemos el producto al que estarán asociados los proveedores y luego creamos todos los registros en una sola operación.
 
-	```plaintext
-	(InteractiveConsole)
-	>>> from fruits.models import FruitsInfo
-	>>> record = record = FruitsInfo(name="banana", origin="USA", protein=1.09, energy=371)
-	>>> record.save()
-	```
+!!! example "Ejemplo: insertar múltiples `Supplier` con `bulk_create()`"
 
-=== ":octicons-terminal-16: shell ipython"
-	
-	```plaintext
-	In [1]: from fruits.models import FruitsInfo
-	In [2]: record = FruitsInfo(name="banana", origin="USA", protein=1.09, energy=371)
-	In [3]: record.save()
-	```
+    === ":octicons-code-16: Código Python"
 
+        ```py hl_lines="4-22"
+        from products.models import Product, Supplier  # (1)!
 
-!!! info "Nota"
-	Si no recibimos mensajes de errores indicados en la consola de Django, podemos suponer que el registro se agregó correctamente
+        product = Product.objects.get(name="Teclado")  # (2)!
+        Supplier.objects.bulk_create(  # (3)!
+            [
+                Supplier(
+                    name="TechStore",
+                    email="contacto@techstore.cl",
+                    product=product
+                ),
+                Supplier(
+                    name="ElectroMarket",
+                    email="ventas@electromarket.cl",
+                    product=product
+                ),
+                Supplier(
+                    name="Digital World",
+                    email="contacto@digitalworld.cl",
+                    product=product
+                )
+            ]
+        )
+        ```
 
-#### Método `create()`
+        1. Importamos los modelos `Product` y `Supplier` que utilizaremos para realizar la inserción.
+        2. Obtenemos el producto `Teclado` que utilizaremos para asociarlo a los proveedores.
+        3. Utilizamos `bulk_create()` para insertar múltiples proveedores en una sola operación.
 
-Otra forma de insertar un registro en una clase modelo es usar el método `create()`. Esto elimina la necesidad de llamar al método `save()` para confirmar el registro en la base de datos. El siguiente ejemplo muestra su uso:
+    === ":octicons-terminal-16: Shell Django"
 
-=== ":octicons-code-16: python"
+        ```{ .python .no-copy hl_lines="1 5 7-27" }
+        --8<-- "snippets/outputs/supplier.objects.bulk_create.txt"
+        ```
 
-	```py hl_lines="2"
-	from fruits.models import FruitsInfo
-	FruitsInfo.objects.create(name="apple", origin="USA", protein=0.26, energy=218)
-	```
-=== ":octicons-terminal-16: shell python"
+También podemos utilizar `bulk_create()` directamente con el modelo `Product` para insertar varios productos en una sola operación. En este caso, no necesitamos obtener previamente ningún objeto relacionado, ya que los campos definidos en `Product` son suficientes para crear cada registro.
 
-	```plaintext
-	(InteractiveConsole)
-	>>> from fruits.models import FruitsInfo
-	>>> FruitsInfo.objects.create(name="apple", origin="USA", protein=0.26, energy=218)
-	>>> <FruitsInfo: USA apple>
-	```
-=== ":octicons-terminal-16: shell ipython"
+!!! example "Ejemplo: inserción múltiples `Product` con `bulk_create()`"
 
-	```plaintext
-	In [1]: from fruits.models import FruitsInfo
-	In [2]: FruitsInfo(name="banana", origin="USA", protein=1.09, energy=371)
-	Out[2]: <FruitsInfo: USA apple>
-	```
+    === ":octicons-code-16: Código Python"
 
-???+ info
-	Si observamos el resultado en el shell, el método `create()` nos retorna un **QuerySet** con el objeto que acabamos de insertar.
+        ```py
+        from products.models import Product
 
-### **Insertar múltiples registros**
+        Product.objects.bulk_create(
+            [
+                Product(
+                    name="Monitor",
+                    category="Periféricos",
+                    price=159990,
+                    stock=8
+                ),
+                Product(
+                    name="Webcam",
+                    category="Periféricos",
+                    price=45990,
+                    stock=12
+                ),
+                Product(
+                    name="Audífonos",
+                    category="Audio",
+                    price=29990,
+                    stock=20
+                )
+            ]
+        )
+        ```
 
-Ahora veremos cómo insertar varios registros en una clase específica. Creamos una nueva clase `FruitsVendor` dentro de :octicons-file-code-16: `models.py` en la aplicación:
-
-=== "Modelo"
-
-	```py title="fruits/models.py"
-	class FruitsVendors(models.Model):
-
-		vendor_id = models.CharField(max_length=4, null=False, primary_key=True)
-		vendor_name = models.CharField(max_length=60)
-		vendor_location = models.CharField(max_length=40)
-
-		def __str__(self):
-			return f"{self.vendor_id} - {self.vendor_name} - {self.vendor_location}"
-	```
-=== "Explorador"
-	
-	```{ .plaintext hl_lines="9" .no-copy }
-	 .
-	├──  manage.py
-	├──  fruits
-	│   ├──  __init__.py
-	│   ├──  admin.py
-	│   ├──  apps.py
-	│   ├──  migrations
-	│   │   └──  __init__.py
-	│   ├──  models.py
-	│   ├──  tests.py
-	│   └──  views.py
-	└──  _site
-	```
-
-En la nueva clase `FruitsVendors`, hemos definido un campo con llave primaria llamado `vendor_id`. Luego, definimos el método `__str__()` para mostrar todos los datos dentro de la clase en una cadena con formato.
-
-Generamos una nueva migración y las ejecutamos con el comando `migrate`:
-
-=== "bash"
-
-	```bash
-	python manage.py makemigrations
-	python manage.py migrate
-	```
-
-=== "output"
-
-	```plaintext
-	Migrations for 'fruits':
-  	fruits/migrations/0002_fruitsvendor.py
-    	- Create model FruitsVendor
-	Operations to perform:
-  	Apply all migrations: admin, auth, contenttypes, fruits, sessions
-	Running migrations:
-  	Applying fruits.0002_fruitsvendor... OK
-	```
-
-#### Método `bulk_create()`
-
-Ahora podemos volver al shell e insertar múltiples registros en la clase `FluitsVendors` a la vez usando el método `bulk_create()`. El siguiente ejemplo muestra su uso:
-
-=== ":octicons-code-16: python"
-
-	```py
-	from fruits.models import FruitsVendors
-	FruitsVendors.objects.bulk_create(
-		[
-			FruitsVendors(vendor_id="V001", vendor_name="Fresh Fruits", vendor_location = "New York"),
-			FruitsVendors(vendor_id="V002", vendor_name="Direct Delivery", vendor_location = "Sao Paulo"),
-			FruitsVendors(vendor_id="V003", vendor_name="Fruit Mate", vendor_location = "Sydney")
-		]
-	)
-	```
-
-=== ":octicons-terminal-16: shell python"
-
-	```plaintext
-	(InteractiveConsole)
-	>>> from fruits.models import FruitsVendors
-	>>> FruitsVendors.objects.bulk_create(
-	...     [
-	...         FruitsVendors(vendor_id="V001", vendor_name="Fresh Fruits", vendor_location = "New York"),
-	...         FruitsVendors(vendor_id="V002", vendor_name="Direct Delivery", vendor_location = "Sao Paulo"),
-	...         FruitsVendors(vendor_id="V003", vendor_name="Fruit Mate", vendor_location = "Sydney")
-	...     ]
-	... )
-	[<FruitsVendors: FruitsVendors object (V001)>,
-	 <FruitsVendors: FruitsVendors object (V002)>,
-	 <FruitsVendors: FruitsVendors object (V003)>]
-	```
-
-=== ":octicons-terminal-16: shell ipython"
-
-	```ipython
-	In [1]: from fruits.models import FruitsVendors
-	   ...: FruitsVendors.objects.bulk_create(
-	   ...:     [
-	   ...:         FruitsVendors(vendor_id="V001", vendor_name="Fresh Fruits", vendor_location = "New York"),
-	   ...:         FruitsVendors(vendor_id="V002", vendor_name="Direct Delivery", vendor_location = "Sao Paulo"),
-	   ...:         FruitsVendors(vendor_id="V003", vendor_name="Fruit Mate", vendor_location="Sydney")
-	   ...:     ]
-	   ...: )
-	Out[1]:
-	[<FruitsVendors: FruitsVendors object (V001)>,
-	 <FruitsVendors: FruitsVendors object (V002)>,
-	 <FruitsVendors: FruitsVendors object (V003)>]
-	```
+    === ":octicons-terminal-16: Shell Django"
+        ```{ .python .no-copy hl_lines="1 5 7-29" }
+        --8<-- "snippets/outputs/product.object.bulk_create.txt"
+        ```
 
 Ahora que ya hemos guardado objetos en la base de datos, vamos a continuar con la operación de obtener esos registros.
 
-### **Listar :octicons-list-unordered-16:**
+### :octicons-list-unordered-16: Listar
 
-#### Método `all()`
+Para **consultar registros** en el ORM de Django utilizamos el **manager `objects`** del modelo. Sus métodos de consulta retornan un **`QuerySet`**, que representa una colección de objetos obtenidos desde la base de datos. A continuación, veremos los principales métodos para listar registros.
 
-Verificaremos esto utilizando el método `all()` que nos retorna un QuerySet que describe todos los objetos de la tabla en la base de datos:
+#### :octicons-check-circle-16: Método `all()`
 
-=== ":octicons-code-16: python"
+El método `all()` nos permite obtener **todos los objetos** del modelo `Supplier` y retorna un `QuerySet` que contiene los registros almacenados en la base de datos:
 
-	```py hl_lines="2"
-	from fruits.models import FruitsVendors
-	FruitsVendors.objects.all()
-	```
-=== ":octicons-terminal-16: shell python"
+!!! example "Ejemplo: consulta con `all()`"
 
-	```bpython
-	(InteractiveConsole)
-	>>> from fruits.models import FruitsVendors
-	>>> FruitsVendors.objects.all()
-	<QuerySet [<FruitsVendors: V001 - Fresh Fruits - New York>, <FruitsVendors: V002 - Direct Delivery - Sao Paulo>, <FruitsVendors: V003 - Fruit Mate - Sydney>]>
-	```
+    === ":octicons-code-16: Código Python"
 
-=== ":octicons-terminal-16: shell ipython"
+        ```py hl_lines="3 4"
+        from products.models import Supplier, Product
+        
+        Supplier.objects.all()
+        Product.objects.all()
+        ```
 
-	```ipython
-	In [1]: from fruits.models import FruitsVendors
-	In [2]: FruitsVendors.objects.all()
-	Out[2]: <QuerySet [<FruitsVendors: V001 - Fresh Fruits - New York>, <FruitsVendors: V002 - Direct Delivery - Sao Paulo>, <FruitsVendors: V003 - Fruit Mate - Sydney>]>
-	```
+    === ":octicons-terminal-16: Shell Django"
 
-Debido a que hemos definido un método `__str__()` para mostrar un objeto en un formato legible para nosotros los humanos 😎, el método `all()` mostrará solo el valor definido en el método `__str__()`.
+        ```{ .python .no-copy hl_lines="1 5 7 9" }
+        --8<-- "snippets/outputs/supplier_products.objects.all.txt"
+        ```
 
-El método `values()` permite extraer los valores de un objeto determinado como se muestra a continuación:
+<div class="grid cards" markdown>
 
-=== ":octicons-code-16: python"
+!!! success "Resultado"
 
-	```py
-	FruitsVendors.objects.all().values()
-	```
-=== ":octicons-terminal-16: shell python"
+    Si observamos el resultado en la Shell, `all()` retorna un **`QuerySet`** con los objetos de `Product` y `Supplier` almacenados en la base de datos. Cada objeto se muestra mediante su nombre, definido en el método `__str__()` de ambos modelos.
 
-	```plaintext
-	(InteractiveConsole)
-	>>> FruitsVendors.objects.all(),values()
-	<QuerySet [{'vendor_id': 'V001', 'vendor_name': 'Fresh Fruits', 'vendor_location': 'New York'}, {'vendor_id': 'V002', 'vendor_name': 'Direct Delivery', 'vendor_location': 'Sao Paulo'}, {'vendor_id': 'V003', 'vendor_name': 'Fruit Mate', 'vendor_location': 'Sydney'}]>
-	```
+!!! tip "Consejo"
 
-=== ":octicons-terminal-16: shell ipython"
+    El método `all()` es útil cuando necesitamos **obtener todos los registros de un modelo** sin aplicar filtros. El `QuerySet` obtenido puede utilizarse posteriormente para recorrer, inspeccionar o realizar otras operaciones sobre los objetos recuperados.
 
-	```ipython
-	In [2]: FruitsVendors.objects.all().values()
-	Out[2]: <QuerySet [{'vendor_id': 'V001', 'vendor_name': 'Fresh Fruits', 'vendor_location': 'New York'}, {'vendor_id': 'V002', 'vendor_name': 'Direct Delivery', 'vendor_location': 'Sao Paulo'}, {'vendor_id': 'V003', 'vendor_name': 'Fruit Mate', 'vendor_location': 'Sydney'}]>
-	```
+</div>
 
-#### Método `get()`
+Como observamos en el resultado de `all()`, obtenemos un **`QuerySet`** con las instancias de los modelos. Para visualizar directamente los **campos y valores** de los registros contenidos en este `QuerySet`, podemos utilizar el método `values()`, que retorna los datos en forma de diccionarios.
 
-Si quisieramos recuperar un solo registro, podemos usar el método `get()`. Sin embargo, si hay más de un registro que coincida con la consulta que especificamos dentro del método `get()`, esto dará como resultado un error `MultipleObjectsReturned`.
+!!! example "Ejemplo: obtener los valores con `values()`"
 
-El método `get()` es más viable cuando buscamos utilizando campos con índices únicos, como llave primaria. El siguiente ejemplo muestra el método `get()` utilizando el campo **id**:
+    === ":octicons-code-16: Código Python"
 
-=== ":octicons-code-16: python"
+        ```py hl_lines="3 4"
+        from products.models import Supplier, Product
+        
+        Supplier.objects.all().values()
+        Product.objects.all().values()
+        ```
 
-	```python
-	from fruits.models import FruitsInfo
-	FruitsInfo.objects.get(id=2)
-	```
-=== ":octicons-terminal-16: shell python"
+    === ":octicons-terminal-16: Shell Django"
 
-	```bpython
-	>>> from fruits.models import FruitsInfo
-	>>> FruitsInfo.objects.get(id=2)
-	<FruitsInfo: USA apple>
-	```
+        ```{ .python .no-copy hl_lines="1 5 7 9-11 14 16-20" }
+        --8<-- "snippets/outputs/supplier_products.objects.all.values.txt"
+        ```
 
-=== ":octicons-terminal-16: shell ipython"
+#### :octicons-check-circle-16: Método `get()`
 
-	```ipython
-	In [1]: from fruits.models import FruitsInfo
-   	In [2]: FruitsInfo.objects.get(id=2)
-	Out[2]: <FruitsInfo: USA apple>
-	```
+Si queremos recuperar un solo registro, podemos utilizar el método `get()`. Sin embargo, si la consulta coincide con más de un registro, se producirá un error `MultipleObjectsReturned`.
 
-### **Búsquedas :octicons-search-16:**
+!!! failure "Ejemplo: error MultipleObjectsReturned"
+
+    === ":octicons-code-16: Código Python"
+
+        ```{ .py hl_lines="3" } 
+        from products.models import Supplier
+
+        Supplier.objects.get(product_id=2)  # (1)!
+        ```
+
+        1. La consulta coincide con **3 proveedores** asociados al producto con `id=2`, por lo que `get()` genera la excepción `MultipleObjectsReturned`.
+
+    === ":octicons-terminal-16: Shell Django"
+
+        ```{ .python .no-copy hl_lines="3 12" }
+        --8<-- "snippets/outputs/supplier.objects.get.multipleobjectsreturned.txt"
+        ```
+
+El método `get()` es más apropiado cuando buscamos utilizando campos con valores únicos, como la llave primaria. En el siguiente ejemplo, utilizaremos el campo **`id`** para obtener un único objeto del modelo `Product`:
+
+!!! example "Ejemplo: consulta exitosa con `get()`"
+
+    === ":octicons-code-16: Código Python"
+
+        ```py hl_lines="3"
+        from products.models import Product
+
+        Product.objects.get(id=2)
+        ```
+
+    === ":octicons-terminal-16: Shell Django"
+
+        ```{ .python .no-copy hl_lines="1 5 7" }
+        --8<-- "snippets/outputs/product.objects.get(id=2).txt"
+        ```
+
+### :octicons-search-16: Búsquedas
 
 En el ORM de Django, podemos especificar operadores para filtrar un conjunto. Esto es análogo a los operadores que se pueden especificar dentro de una declaración [`WHERE` de SQL](https://es.wikipedia.org/wiki/SQL#:~:text=Cl%C3%A1usula%20WHERE%20(Donde)). Algunos ejemplos de búsquedas de campos y sus operadores SQL correspondientes son:
 
