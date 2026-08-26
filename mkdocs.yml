@@ -2,11 +2,9 @@ site_name: Django Boost
 
 extra_css:
   - assets/css/nerd-font.css
-  - assets/css/post.css
+  - assets/css/extras.css
 
 extra_javascript:
-  - assets/js/libs/sweetalert2.min.js
-  - assets/js/generate-project.js
   - assets/js/post-zoom.js
   - assets/js/extras.js
 
@@ -43,8 +41,10 @@ theme:
     - navigation.tabs
     - navigation.instant
     - navigation.instant.prefetch
+    - navigation.top
     - navigation.tracking
     - content.code.copy
+    - content.code.annotate
 
 markdown_extensions:
   - abbr
@@ -54,6 +54,7 @@ markdown_extensions:
   - pymdownx.details
   - pymdownx.snippets
   - pymdownx.keys
+  - def_list
   - pymdownx.emoji:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
@@ -66,6 +67,8 @@ markdown_extensions:
       permalink: true
   - pymdownx.tabbed:
       alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
 
 plugins:
   - search
@@ -73,5 +76,8 @@ plugins:
       post_date_format: short # long | medium | short
       post_url_format: "{slug}"
       archive: false
+
+extra:
+  generator: false
 
 copyright: Copyright &copy; 2024 @mcherrera
