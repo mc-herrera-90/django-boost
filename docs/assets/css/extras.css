@@ -1,3 +1,8 @@
+/* — Base wrapper — */
+.md-content {
+  font-size: 17px;
+}
+
 /* — Título principal — */
 .md-content h1 {
   text-align: center;
@@ -26,7 +31,7 @@
   }
 }
 
-/* — Títulos de sección — */
+/* — Títulos de sección H2 — */
 .md-content h2 {
   margin-bottom: 1.2rem;
   padding-left: 0.85rem;
@@ -37,45 +42,76 @@
 /* Acento vertical */
 .md-content h2::before {
   content: "";
-
   position: absolute;
   left: 0;
   top: 0.18em;
-
   width: 3px;
   height: calc(100% - 0.36em);
-
   border-radius: 3px;
-
   background: var(--md-primary-fg-color);
-
   opacity: 0.65;
-
   transform: scaleY(0.85);
   transform-origin: center;
-
   transition:
     transform 0.25s ease,
     opacity 0.25s ease;
 }
 
-
-/* Hover del título */
 .md-content h2:hover::before {
   opacity: 1;
   transform: scaleY(1);
 }
 
-
-.md-content p {
-    font-size: 18px;
-    text-align: justify;
+/* — Títulos de sección H3 — */
+.md-content h3 {
+  margin-top: 1.6rem;
+  margin-bottom: 0.7rem;
+  font-weight: 700;
+  color: var(--md-default-fg-color);
+  transition: color 0.2s ease;
 }
 
+.md-content h3::before {
+  content: "›";
+  margin-right: 0.45rem;
+  color: var(--md-accent-fg-color);
+  font-weight: 700;
+  transition: transform 0.2s ease;
+}
 
-/* =========================================================
-   Entrada del título
-   ========================================================= */
+.md-content h3:hover::before {
+  display: inline-block;
+  transform: translateX(3px);
+}
+
+/* — Títulos de sección H4 — */
+.md-content h4 {
+  font-weight: 700;
+  color: var(--md-default-fg-color);
+  transition: color 0.2s ease;
+}
+
+.md-content h4::before {
+  content: "››";
+  margin-right: 0.45rem;
+  color: var(--md-accent-fg-color);
+  font-weight: 700;
+  transition: transform 0.2s ease;
+}
+
+.md-content h4:hover::before {
+  display: inline-block;
+  transform: translateX(3px);
+}
+
+details .tabbed-set,
+.admonition .tabbed-set {
+  margin: 0 -1em !important;
+}
+
+.md-content .admonition {
+    font-size: .75rem !important;
+}
 
 .md-content h2 {
   animation: section-title-in 0.35s ease both;
@@ -114,52 +150,6 @@
     box-shadow 0.2s;
 }
 
-.swal-md-button:hover {
-  background-color: var(--md-primary-fg-color--dark);
-}
-
-.swal-md-button:focus {
-  outline: 0;
-  box-shadow: 0 0 0 0.2rem var(--md-primary-fg-color--light);
-}.swal-md-button {
-  display: inline-block;
-  padding: 0.625em 1.25em;
-
-  border: 0;
-  border-radius: 0.2rem;
-
-  background-color: var(--md-primary-fg-color);
-  color: var(--md-primary-bg-color);
-
-  font-family: inherit;
-  font-size: 0.8rem;
-  font-weight: 700;
-
-  cursor: pointer;
-
-  transition:
-    background-color 0.2s,
-    box-shadow 0.2s;
-}
-
-.swal-md-button:hover {
-  background-color: var(--md-primary-fg-color--dark);
-}
-
-.swal-md-button:focus {
-  outline: 0;
-  box-shadow: 0 0 0 0.2rem var(--md-primary-fg-color--light);
-}
-
-.md-modal {
-    background-color: var(--md-default-bg-color);
-    color: var(--md-default-fg-color);
-}
-
-.md-modal .swal2-input-label {
-  color: var(--md-default-fg-color--light);
-}
-
 /* TABS */
 .tabbed-set {
     border: 1px solid var(--md-default-fg-color--lightest);
@@ -169,9 +159,8 @@
 .tabbed-set .admonition
  {
     border: none !important;
-    margin: 0;
+    margin: 0 !important;
 }
-
 
 .font-controls {
   display: flex;
@@ -227,10 +216,147 @@
 .font-controls button:active {
   transform: translateY(1px);
 }
-/* .md-content--post .md-typeset {
-  font-size: var(--post-font-size, 100%);
-} */
 
 .md-content--post .md-content__inner {
   zoom: var(--post-zoom, 1);
+}
+/* =========================================================
+   VISTA
+   ========================================================= */
+
+.view-option {
+  width: 100%;
+  padding: 0.5rem 0;
+
+  border: 0;
+  background: none;
+
+  color: inherit;
+  font: inherit;
+  text-align: left;
+
+  cursor: pointer;
+}
+
+.view-option:hover,
+.view-option[aria-pressed="true"] {
+  color: var(--md-accent-fg-color);
+}
+
+
+/* =========================================================
+   MODO CONCENTRADO
+   ========================================================= */
+
+.md-content--post.focus-mode {
+  display: block;
+}
+
+/* Ocultar sidebar completo */
+.md-content--post.focus-mode .md-sidebar--post {
+  display: none !important;
+}
+
+/* Ocultar cualquier TOC */
+.md-content--post.focus-mode .md-nav--secondary {
+  display: none !important;
+}
+
+/* Por si Material crea otro sidebar secundario */
+.md-content--post.focus-mode .md-sidebar--secondary {
+  display: none !important;
+}
+
+/* Contenido ocupa todo */
+.md-content--post.focus-mode .md-content__inner {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+/* =========================================================
+   BOTÓN VISTA NORMAL
+   ========================================================= */
+
+.post-view-reset {
+  position: fixed;
+
+  right: 1rem;
+  bottom: 1rem;
+
+  z-index: 9999;
+
+  display: none;
+
+  align-items: center;
+  gap: 0.4rem;
+
+  padding: 0.5rem 0.75rem;
+
+  border: 0;
+  border-radius: 0.3rem;
+
+  background: var(--md-primary-fg-color);
+  color: var(--md-primary-bg-color);
+
+  font: inherit;
+  cursor: pointer;
+
+  box-shadow: var(--md-shadow-z2);
+}
+
+/* Mostrarlo cuando haya algún modo activo */
+.md-content--post.focus-mode .post-view-reset,
+.md-content--post.toc-compact .post-view-reset {
+  display: flex;
+}
+
+.post-view-reset:hover {
+  background: var(--md-accent-fg-color);
+}
+
+.post-view-reset svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.mermaid  {
+  display: flex;
+  margin: auto;
+  justify-content: center;
+}
+.admonition .tabbed-set ,
+.admonition.inline .tabbed-set{
+  border: 0;
+  padding: 0 5px;
+}
+.admonition .no-copy.highlight,
+.admonition .no-copy.highlight pre {
+  margin: 0 !important;
+}
+
+.md-nav--secondary.toc-compact
+> .md-nav__list
+> .md-nav__item
+> .md-nav {
+  display: none;
+}
+
+.md-typeset .grid.first-grid {
+  grid-template-columns: 65% 1fr !important;
+}
+@media screen and (max-width: 768px) {
+  .md-typeset .grid.first-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+.highlight .hll {
+  background-color: var(--md-code-hl-color--light);
+  box-shadow: 2px 0 0 0 var(--md-accent-fg-color) inset;
+}
+/* Utilidades */
+.px-1 {
+  padding-left: 5px;
+  padding-right: 5px;
 }
