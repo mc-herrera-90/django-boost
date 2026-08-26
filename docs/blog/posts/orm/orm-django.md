@@ -193,38 +193,7 @@ Podemos crear un registro **instanciando la clase del modelo** y proporcionando 
 
 En el siguiente ejemplo, veremos cómo agregar un nuevo registro al modelo `Product`:
 
-!!! example "Ejemplo: inserción exitosa con `save()`"
-
-    === ":octicons-code-16: Código Python"
-
-        ```py hl_lines="3 4"
-        from products.models import Product #(1)!
-
-        producto = Product(name="Notebook", category="Electrónica", price=899990, stock=10) #(2)!
-        producto.save() #(3)!
-        ```
-
-        1. Importamos la clase del modelo `Product`
-        2. Instanciamos la clase y la almacenamos en una variable
-        3. Invocamos al método `save()` para insertar el producto en la base de datos
-
-    === ":octicons-terminal-16: Shell Django"
-
-        ```{ .python .no-copy hl_lines="1 5 7 8" }
-        --8<-- "snippets/outputs/product.save.txt"
-        ```
-
-<div class="grid cards" markdown>
-
-!!! success "Resultado"
-
-    Si al ejecutar `save()` no se muestra ningún error en la Shell de Django, significa que el registro se guardó correctamente en la base de datos.
-
-!!! tip "Consejo"
-
-    El método `save()` es útil cuando necesitamos **trabajar con la instancia antes de guardarla**, por ejemplo, para realizar validaciones o modificar sus valores.
-    
-</div>
+--8<-- "snippets/examples/orm/product.new.instance.save.md"
 
 #### :octicons-plus-circle-16: Método `create()`
 
@@ -454,41 +423,11 @@ Como observamos en el resultado de `all()`, obtenemos un **`QuerySet`** con las 
 
 Si queremos recuperar un solo registro, podemos utilizar el método `get()`. Sin embargo, si la consulta coincide con más de un registro, se producirá un error `MultipleObjectsReturned`.
 
-!!! failure "Ejemplo: error MultipleObjectsReturned"
-
-    === ":octicons-code-16: Código Python"
-
-        ```{ .py hl_lines="3" } 
-        from products.models import Supplier
-
-        Supplier.objects.get(product_id=2)  # (1)!
-        ```
-
-        1. La consulta coincide con **3 proveedores** asociados al producto con `id=2`, por lo que `get()` genera la excepción `MultipleObjectsReturned`.
-
-    === ":octicons-terminal-16: Shell Django"
-
-        ```{ .python .no-copy hl_lines="3 12" }
-        --8<-- "snippets/outputs/supplier.objects.get.multipleobjectsreturned.txt"
-        ```
+--8<-- "snippets/examples/orm/product.get.multipleobjectsreturned.md"
 
 El método `get()` es más apropiado cuando buscamos utilizando campos con valores únicos, como la llave primaria. En el siguiente ejemplo, utilizaremos el campo **`id`** para obtener un único objeto del modelo `Product`:
 
-!!! example "Ejemplo: consulta exitosa con `get()`"
-
-    === ":octicons-code-16: Código Python"
-
-        ```py hl_lines="3"
-        from products.models import Product
-
-        Product.objects.get(id=2)
-        ```
-
-    === ":octicons-terminal-16: Shell Django"
-
-        ```{ .python .no-copy hl_lines="1 5 7" }
-        --8<-- "snippets/outputs/product.objects.get(id=2).txt"
-        ```
+--8<-- "snippets/examples/orm/product.get.id.md"
 
 ### :octicons-search-16: Búsquedas
 
@@ -500,33 +439,7 @@ Estas búsquedas permiten especificar condiciones que, internamente, son equival
 
 Algunas de las búsquedas más utilizadas son:
 
-<div class="grid cards search-operators" markdown>
-
-- **ORM — `contains`**
-
-    **SQL — `LIKE`**
-
-    Busca registros cuyo campo **contenga** un determinado texto.
-
-- **ORM — `range`**
-
-    **SQL — `BETWEEN`**
-
-    Busca registros cuyo valor se encuentre **dentro de un intervalo**.
-
-- **ORM — `gte`**
-
-    **SQL — `>=`**
-
-    Busca registros cuyo valor sea **mayor o igual** al valor indicado.
-
-- **ORM — `lte`**
-
-    **SQL — `<=`**
-
-    Busca registros cuyo valor sea **menor o igual** al valor indicado.
-
-</div>
+--8<-- "snippets/grids/django-orm-search-operators.md"
 
 Los siguientes ejemplos muestran cómo utilizar estas búsquedas para **filtrar registros de los modelos `Product` y `Supplier`** desde la Shell de Django.
 
@@ -534,21 +447,7 @@ Los siguientes ejemplos muestran cómo utilizar estas búsquedas para **filtrar 
 
 Podemos buscar productos cuyo nombre contenga una determinada palabra o parte del texto utilizando el operador `contains`. Por ejemplo, busquemos los productos cuyo nombre incluya la palabra **"Tecl"**:
 
-!!! example "Ejemplo: búsqueda exitosa con `contains`"
-
-    === ":octicons-code-16: Código Python"
-
-        ```py hl_lines="3"
-        from products.models import Product
-
-        Product.objects.filter(name__contains="Tecl")
-        ```
-
-    === ":octicons-terminal-16: Shell Django"
-
-        ```{ .python .no-copy hl_lines="1 5 7" }
-        --8<-- 'snippets/outputs/product.objects.filter(name__contains="Tecl").txt'
-        ```
+--8<-- "snippets/examples/orm/product.filter.name.contains.md"
 
 #### :octicons-check-circle-16: Operadores `gte` y `lte`
 
@@ -556,43 +455,13 @@ Podemos utilizar `gte` y `lte` para filtrar registros según el valor de un camp
 
 Por ejemplo, podemos buscar productos cuyo precio sea mayor o igual a `100000` y productos cuyo stock sea menor o igual a `10`:
 
-!!! example "Ejemplo: búsqueda con `gte` y `lte`"
-
-    === ":octicons-code-16: Python"
-
-        ```py
-        from products.models import Product
-
-        Product.objects.filter(price__gte=100000)
-        Product.objects.filter(stock__lte=10)
-        ```
-
-    === ":octicons-terminal-16: Shell Django"
-
-        ```{ .python .no-copy hl_lines="1 5 7-10" }
-        --8<-- "snippets/outputs/product.objects.filter_gte_lte.txt"
-        ```
+--8<-- "snippets/examples/orm/product.filter.price.gte.lte.md"
 
 #### :octicons-check-circle-16: Operador `range`
 
 El operador `range` permite filtrar registros cuyo valor se encuentre **dentro de un intervalo determinado**. Por ejemplo, podemos utilizarlo para buscar productos cuyo precio esté entre `30000` y `100000`, o entre `30000` y `200000`:
 
-!!! example "Ejemplo: búsqueda con `range`"
-
-    === ":octicons-code-16: Código Python"
-
-        ```py hl_lines="3 4"
-        from products.models import Product
-
-        Product.objects.filter(price__range=(30000, 100000))
-        Product.objects.filter(price__range=(30000, 200000))
-        ```
-
-    === ":octicons-terminal-16: Shell Django"
-
-        ```{ .python .no-copy hl_lines="1 5 7-10" }
-        --8<-- "snippets/outputs/product.objects.filter(price__range=(start,end)).txt"
-        ```
+--8<-- "snippets/examples/orm/product.filter.price.range.md"
 
 ### :octicons-sync-16: Actualizar
 
@@ -611,57 +480,13 @@ El método `update()` permite modificar directamente los campos de los registros
 
 En el siguiente ejemplo, actualizaremos el **precio del producto con `id=2`**, correspondiente a `Teclado`:
 
-!!! example "Ejemplo: actualización de un `Product`"
+--8<-- "snippets/examples/orm/product.update.price.filter.id.md"
 
-    === ":octicons-code-16: Código Python"
-
-        ```py hl_lines="3-5"
-        from products.models import Product
-
-        Product.objects.get(id=2).price #(1)!
-        Product.objects.filter(id=2).update(price=39990) #(2)!
-        Product.objects.get(id=2).price #(3)!
-        ```
-
-        1. Consultamos el precio actual del producto.
-        2. Actualizamos el precio del producto a `39990`.
-        3. Consultamos nuevamente el precio para comprobar la actualización.
-
-    === ":octicons-terminal-16: Shell Django"
-
-        ```{ .python .no-copy hl_lines="1 5 7-12" }
-        --8<-- "snippets/outputs/product.objects.filter(id).update(price).txt"
-        ```
-
-#### :octicons-check-circle-16: Método `save()` para actualizar`
+#### :octicons-check-circle-16: Método `save()` para actualizar
 
 El método `save()` permite modificar una instancia del modelo y guardar los cambios realizados en la base de datos.
 
-!!! example "Ejemplo: actualización de un `Supplier`"
-
-    === ":octicons-code-16: Código Python"
-
-        ```py hl_lines="3-7"
-        from products.models import Supplier
-
-        supplier = Supplier.objects.get(id=1) #(1)!
-        supplier.email #(2)!
-        supplier.email = "soporte@techstore.cl" #(3)!
-        supplier.save() #(4)!
-        supplier.email #(5)!
-        ```
-
-        1. Obtenemos el proveedor con `id=1` para trabajar con su instancia.
-        2. Consultamos el correo actual.
-        3. Modificamos el correo electrónico del proveedor.
-        4. Guardamos los cambios en la base de datos mediante `save()`.
-        5. Consultamos el correo actualizado para comprobar el cambio.
-
-    === ":octicons-terminal-16: Shell Django"
-
-        ```{ .python .no-copy hl_lines="1 5 7-13" }
-        --8<-- "snippets/outputs/supplier.update.email.save.txt"
-        ```
+--8<-- "snippets/examples/orm/supplier.update.email.save.md"
 
 ### :octicons-trash-16: Eliminar
 
@@ -671,59 +496,10 @@ El ORM de Django proporciona el método `delete()` para **eliminar registros** d
 
 Para eliminar un registro específico, podemos obtener primero la instancia mediante `get()` y luego utilizar `delete()`. En el siguiente ejemplo, eliminaremos el `Supplier` con `id=3`:
 
-!!! example "Ejemplo: eliminación de un `Supplier`"
-
-    === ":octicons-code-16: Código Python"
-
-        ```py hl_lines="3-5"
-        from products.models import Supplier
-
-        Supplier.objects.all() #(1)!
-        Supplier.objects.get(id=3).delete() #(2)!
-        Supplier.objects.all() #(3)!
-        ```
-
-        1. Consultamos los `Supplier` almacenados actualmente.
-        2. Obtenemos y eliminamos el `Supplier` con `id=3`.
-        3. Consultamos nuevamente los registros para comprobar la eliminación.
-
-    === ":octicons-terminal-16: Shell Django"
-
-        ```{ .python .no-copy hl_lines="1 5 7-12" }
-        --8<-- "snippets/outputs/supplier.objects.get.delete.txt"
-        ```
+--8<-- "snippets/examples/orm/supplier.delete.get.id.md"
 
 #### :octicons-check-circle-16: Método `delete()` (eliminar múltiples registros)
 
 El método `delete()` también puede utilizarse sobre un `QuerySet` para eliminar **varios registros a la vez**. Al utilizarlo junto con `all()`, se eliminan todos los registros del modelo. En este caso, eliminaremos los `Supplier` que aún permanecen en la base de datos:
 
-!!! example "Ejemplo: eliminar múltiples `Supplier`"
-
-    === ":octicons-code-16: Código Python"
-
-        ```py hl_lines="3 5 7"
-        from products.models import Supplier
-
-        Supplier.objects.all() #(1)!
-        Supplier.objects.all().delete() #(2)!
-        Supplier.objects.all() #(3)!
-        ```
-
-        1. Consultamos los `Supplier` almacenados actualmente.
-        2. Eliminamos todos los `Supplier` mediante `delete()`.
-        3. Consultamos nuevamente los registros para comprobar la eliminación.
-
-    === ":octicons-terminal-16: Shell Django"
-
-        ```{ .python .no-copy hl_lines="1 5 7-12" }
-        --8<-- "snippets/outputs/django-shell.txt"
-        >>> from products.models import Supplier
-        >>>
-        >>> Supplier.objects.all()
-        <QuerySet [<Supplier: TechStore>, <Supplier: ElectroMarket>]>
-        >>> Supplier.objects.all().delete()
-        (2, {'products.Supplier': 2})
-        >>> Supplier.objects.all()
-        <QuerySet []>
-        >>> exit()
-        ```
+--8<-- "snippets/examples/orm/supplier.delete.all.md"
