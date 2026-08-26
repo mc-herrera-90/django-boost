@@ -1,0 +1,17 @@
+graph TD
+    A[Aplicación Django] -->|Interacción| B[Modelos]
+
+    subgraph ORM["ORM de Django"]
+        B --> C[Managers]
+        C --> D[QuerySets]
+
+        D -->|Construye consulta| E[Consulta SQL]
+
+        D --> F{¿Evaluado?}
+        F -->|No| D
+        F -->|Sí| E
+    end
+
+    E -->|Ejecuta| G@{ shape: cyl, label: "Base de Datos" }
+    G -->|Resultados| D
+    D -->|Objetos Python| A
