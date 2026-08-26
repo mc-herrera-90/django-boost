@@ -211,7 +211,7 @@ En el siguiente ejemplo, veremos cómo agregar un nuevo registro al modelo `Prod
     === ":octicons-terminal-16: Shell Django"
 
         ```{ .python .no-copy hl_lines="1 5 7 8" }
-        --8<-- "snippets/outputs/products.save.txt"
+        --8<-- "snippets/outputs/product.save.txt"
         ```
 
 <div class="grid cards" markdown>
@@ -245,7 +245,7 @@ El siguiente ejemplo muestra su uso:
     === ":octicons-terminal-16: Shell Django"
 
         ```{ .python .no-copy hl_lines="1 5 7 8" }
-        --8<-- "snippets/outputs/products.objects.create.txt"
+        --8<-- "snippets/outputs/product.objects.create.txt"
         ```
 
 <div class="grid cards" markdown>
@@ -492,195 +492,238 @@ El método `get()` es más apropiado cuando buscamos utilizando campos con valor
 
 ### :octicons-search-16: Búsquedas
 
-En el ORM de Django, podemos especificar operadores para filtrar un conjunto. Esto es análogo a los operadores que se pueden especificar dentro de una declaración [`WHERE` de SQL](https://es.wikipedia.org/wiki/SQL#:~:text=Cl%C3%A1usula%20WHERE%20(Donde)). Algunos ejemplos de búsquedas de campos y sus operadores SQL correspondientes son:
+En el ORM de Django podemos **filtrar los registros de un `QuerySet`** utilizando búsquedas sobre los campos del modelo. Para especificar el tipo de búsqueda, utilizamos **dos guiones bajos (`__`)** entre el nombre del campo y el operador.
 
-|ORM|SQL|
-|:--|:--|
-|`contains`|`LIKE`|
-|`range`|`BETWEEN`|
-|`gte` (mayor o igual que)|`>=`|
-|`lte` (menor o igual que)|`<=`|
+Por ejemplo, `name__contains` indica que queremos buscar en el campo `name` utilizando el operador `contains`.
 
-Los siguientes ejemplos demuestran cómo podemos utilizar las búsquedas por atributos dentro de Django shell.
+Estas búsquedas permiten especificar condiciones que, internamente, son equivalentes a operadores utilizados en la cláusula `WHERE` de SQL.
 
-#### Operador - `contains`
+Algunas de las búsquedas más utilizadas son:
 
-Busquemos nombres de proveedores que incluyan la palabra "Fruits" en la clase `FruitsVendor`:
+<div class="grid cards search-operators" markdown>
 
-=== ":octicons-code-16: python"
+- **ORM — `contains`**
 
-	```python
-	from fruits.models import FruitsVendors
-	FruitsVendors.objects.filter(vendor_name__contains="Fruit")
-	```
+    **SQL — `LIKE`**
 
-=== ":octicons-terminal-16: shell python"
+    Busca registros cuyo campo **contenga** un determinado texto.
 
-	```plaintext
-	>>> from fruits.models import FruitsVendors
-	>>> FruitsVendors.objects.filter(vendor_name__contains="Fruit")
-	<QuerySet [<FruitsVendor: FruitsVendor object (V001)>, <FruitsVendor: FruitsVendor object (V003)>]
-	```
+- **ORM — `range`**
 
-=== ":octicons-terminal-16: shell ipython"
+    **SQL — `BETWEEN`**
 
-	```ipython
-	In [1]: from fruits.models import FruitsVendors
-	In [2]: FruitsVendors.objects.filter(vendor_name__contains="Fruit")
-	Out[2]: <QuerySet [<FruitsVendors: V001 - Fresh Fruits - New York>, <FruitsVendors: V003 - Fruit Mate - Sydney>]>
-	```
+    Busca registros cuyo valor se encuentre **dentro de un intervalo**.
 
-#### Operador - `gte` y `lte`
+- **ORM — `gte`**
 
-En los siguientes ejemplos, buscaremos registros usando los operadores de mayor y menor que:
+    **SQL — `>=`**
 
-=== ":octicons-code-16: python"
-	```py
-	from fruits.models import FruitsInfo
-	FruitsInfo.objects.filter(protein__gte=1)
-	FruitsInfo.objects.filter(energy__lte=250)
-	```
-=== ":octicons-terminal-16: shell python"
-	```
-	>>> from fruits.models import FruitsInfo
-	>>> FruitsInfo.objects.filter(protein__gte=1)
-	<QuerySet [<FruitsInfo: USA banana>]>
-	>>> FruitsInfo.objects.filter(energy__lte=250)
-	<QuerySet [<FruitsInfo: USA apple>]>
-	```
-=== ":octicons-terminal-16: shell ipython"
-	```
-	In [1]: from fruits.models import FruitsInfo
-	In [2]: FruitsInfo.objects.filter(protein__gte=1)
-	Out[2]: <QuerySet [<FruitsInfo: USA banana>]>
-	In [3]: FruitsInfo.objects.filter(energy__lte=250)
-	Out[3]: <QuerySet [<FruitsInfo: USA apple>]>
-	```
-#### Operador - `range`
+    Busca registros cuyo valor sea **mayor o igual** al valor indicado.
 
-En los siguientes ejemplos, buscaremos registros usando los operadores de range:
+- **ORM — `lte`**
 
-=== ":octicons-code-16: python"
-	```py
-	from fruits.models import FruitsInfo
-	FruitsInfo.objects.filter(energy__range=(200, 300))
-	FruitsInfo.objects.filter(energy__range=(200, 400))
-	```
-=== ":octicons-terminal-16: shell python"
-	```
-	>>> from fruits.models import FruitsInfo
-	>>> FruitsInfo.objects.filter(energy__range=(200, 300))
-	<QuerySet [<FruitsInfo: USA apple>]>
-	>>> FruitsInfo.objects.filter(energy__range=(200, 400))
-	<QuerySet [<FruitsInfo: USA banana>, <FruitsInfo: USA apple>]>
-	```
-=== ":octicons-terminal-16: shell ipython"
-	```
-	In [1]: from fruits.models import FruitsInfo
-	In [2]: FruitsInfo.objects.filter(energy__range=(200, 300))
-	Out[2]: <QuerySet [<FruitsInfo: USA apple>]>
-	In [3]: FruitsInfo.objects.filter(energy__range=(200, 400))
-	Out[3]: <QuerySet [<FruitsInfo: USA banana>, <FruitsInfo: USA apple>]>
-	```
+    **SQL — `<=`**
 
-### **Actualizar :octicons-sync-16:**
+    Busca registros cuyo valor sea **menor o igual** al valor indicado.
 
-La operación de actualización se puede realizar junto con el método `filter()` para especificar el registro que se puede actualizar. Actualicemos el atributo `origin` al registro (`id=1`) en la tabla `FruitsInfo`:
+</div>
 
-=== ":octicons-code-16: python"
-	```python hl_lines="3"
-	from fruits.models import FruitsInfo
-	FruitsInfo.objects.get(id=1).origin #(1)!
-	FruitsInfo.objects.filter(id=1).update(origin='australia') #(2)!
-	FruitsInfo.objects.get(id=1).origin #(3)!
-	```
+Los siguientes ejemplos muestran cómo utilizar estas búsquedas para **filtrar registros de los modelos `Product` y `Supplier`** desde la Shell de Django.
 
-	1. Mostramos el valor actual del atributo origin
-	2. Actualizamos el atributo origin
-	3. Mostramos el valor actualizado del atributo origin
+#### :octicons-check-circle-16: Operador - `contains`
 
-=== ":octicons-terminal-16: shell python"
+Podemos buscar productos cuyo nombre contenga una determinada palabra o parte del texto utilizando el operador `contains`. Por ejemplo, busquemos los productos cuyo nombre incluya la palabra **"Tecl"**:
 
-	```bpython
-	>>> from fruits.models import FruitsInfo
-	>>> FruitsInfo.objects.get(id=1).origin
-	'USA'
-	>>> FruitsInfo.objects.filter(id=1).update(origin='australia')
-	1
-	>>> FruitsInfo.objects.get(id=1).origin
-	'australia'
-	```
+!!! example "Ejemplo: búsqueda exitosa con `contains`"
 
-=== ":octicons-terminal-16: shell ipython"
+    === ":octicons-code-16: Código Python"
 
-	```bpython
-	In [1]: from fruits.models import FruitsInfo
-	In [2]: FruitsInfo.objects.get(id=1).origin
-	Out[2]: 'USA'
-	In [3]: FruitsInfo.objects.filter(id=1).update(origin='australia')
-	Out[3]: 1
-	In [4]: FruitsInfo.objects.get(id=1).origin
-	Out[4]: 'australia'
-	```
+        ```py hl_lines="3"
+        from products.models import Product
 
-### **Eliminar :octicons-x-circle-16:**
+        Product.objects.filter(name__contains="Tecl")
+        ```
 
-El ORM nos ofrece el método `delete()` para eliminar registros de una clase específica. Esto es análogo a la instrucción [`DELETE` en SQL](https://en.wikipedia.org/wiki/Delete_(SQL))
+    === ":octicons-terminal-16: Shell Django"
 
-#### Eliminar un registro - Método `delete()`
+        ```{ .python .no-copy hl_lines="1 5 7" }
+        --8<-- 'snippets/outputs/product.objects.filter(name__contains="Tecl").txt'
+        ```
 
-Al eliminar un solo registro, debemos utilizar el método `get()`, ya que devuelve directamente el objeto especificado. En el siguiente ejemplo eliminamos un registro (`id=3`) de la clase `FruitsInfo()`:
+#### :octicons-check-circle-16: Operadores `gte` y `lte`
 
-=== "Python"
-	```python
-	from fruits.models import FruitsInfo
-	
-	FruitsInfo.objects.all() #(1)!
-	FruitsInfo.objects.get(id=3).delete() #(2)!
-	FruitsInfo.objects.all() #(3)!
-	```
+Podemos utilizar `gte` y `lte` para filtrar registros según el valor de un campo numérico. `gte` permite obtener valores **mayores o iguales**, mientras que `lte` permite obtener valores **menores o iguales**.
 
-	1. Mostramos todos los objetos
-	2. Eliminamos el objeto
-	3. Mostramos todos los objetos nuevamente
+Por ejemplo, podemos buscar productos cuyo precio sea mayor o igual a `100000` y productos cuyo stock sea menor o igual a `10`:
 
-=== "Shell"
+!!! example "Ejemplo: búsqueda con `gte` y `lte`"
 
-	```
-	>>> from fruits.models import FruitsInfo
-	>>> FruitsInfo.objects.all().values()
-	<QuerySet [<FruitsInfo: australia apple>, <FruitsInfo: USA banana>, <FruitsInfo: USA pineapple>]>
-	>>> FruitsInfo.objects.get(id=3).delete()
-	(1, {'fruits.FruitsInfo': 1})
-	>>> FruitsInfo.objects.all()
-	<QuerySet [<FruitsInfo: australia apple>, <FruitsInfo: USA banana>]>
-	```
+    === ":octicons-code-16: Python"
 
-#### Eliminar varios registros - Método `delete()`
+        ```py
+        from products.models import Product
 
-El método `delete()` se puede utilizar para eliminar todos los registros de una clase determinada, simplemente especificando la operación de eliminación con el método `all()` para eliminar todos o `filter()` para eliminar un conjunto que cumpla una determinada condición. En el siguiente ejemplo, eliminaremos todos los registros:
+        Product.objects.filter(price__gte=100000)
+        Product.objects.filter(stock__lte=10)
+        ```
 
-=== "Python"
-	```python
-	from fruits.models import FruitsInfo
-	
-	FruitsInfo.objects.all() #(1)!
-	FruitsInfo.objects.all().delete() #(2)!
-	FruitsInfo.objects.all() #(3)!
-	```
+    === ":octicons-terminal-16: Shell Django"
 
-	1. Mostramos todos los objetos
-	2. Eliminamos todos los objetos
-	3. Comprobamos, mostrando todos los objetos
+        ```{ .python .no-copy hl_lines="1 5 7-10" }
+        --8<-- "snippets/outputs/product.objects.filter_gte_lte.txt"
+        ```
 
-=== "Shell"
+#### :octicons-check-circle-16: Operador `range`
 
-	```
-	>>> from fruits.models import FruitsInfo
-	>>> FruitsInfo.objects.all()
-	<QuerySet [<FruitsInfo: australia apple>, <FruitsInfo: USA banana>]>
-	>>> FruitsInfo.objects.all().delete()
-	(2, {'fruits.FruitsInfo': 2})
-	>>> FruitsInfo.objects.all()
-	<QuerySet []>
-	```
+El operador `range` permite filtrar registros cuyo valor se encuentre **dentro de un intervalo determinado**. Por ejemplo, podemos utilizarlo para buscar productos cuyo precio esté entre `30000` y `100000`, o entre `30000` y `200000`:
+
+!!! example "Ejemplo: búsqueda con `range`"
+
+    === ":octicons-code-16: Código Python"
+
+        ```py hl_lines="3 4"
+        from products.models import Product
+
+        Product.objects.filter(price__range=(30000, 100000))
+        Product.objects.filter(price__range=(30000, 200000))
+        ```
+
+    === ":octicons-terminal-16: Shell Django"
+
+        ```{ .python .no-copy hl_lines="1 5 7-10" }
+        --8<-- "snippets/outputs/product.objects.filter(price__range=(start,end)).txt"
+        ```
+
+### :octicons-sync-16: Actualizar
+
+En el ORM de Django podemos **actualizar los registros de un modelo de distintas formas**, dependiendo de si necesitamos modificar directamente los datos en la base de datos o trabajar primero con una instancia del modelo.
+
+Las dos formas principales son:
+
+- **`update()`**: permite actualizar directamente uno o varios registros a partir de un `QuerySet`.
+- **`save()`**: permite modificar una instancia del modelo y luego guardar los cambios en la base de datos.
+
+A continuación, veremos cada una de estas formas utilizando los modelos `Product` y `Supplier`.
+
+#### :octicons-check-circle-16: Método `update()`
+
+El método `update()` permite modificar directamente los campos de los registros que coincidan con una consulta realizada mediante `filter()`.
+
+En el siguiente ejemplo, actualizaremos el **precio del producto con `id=2`**, correspondiente a `Teclado`:
+
+!!! example "Ejemplo: actualización de un `Product`"
+
+    === ":octicons-code-16: Código Python"
+
+        ```py hl_lines="3-5"
+        from products.models import Product
+
+        Product.objects.get(id=2).price #(1)!
+        Product.objects.filter(id=2).update(price=39990) #(2)!
+        Product.objects.get(id=2).price #(3)!
+        ```
+
+        1. Consultamos el precio actual del producto.
+        2. Actualizamos el precio del producto a `39990`.
+        3. Consultamos nuevamente el precio para comprobar la actualización.
+
+    === ":octicons-terminal-16: Shell Django"
+
+        ```{ .python .no-copy hl_lines="1 5 7-12" }
+        --8<-- "snippets/outputs/product.objects.filter(id).update(price).txt"
+        ```
+
+#### :octicons-check-circle-16: Método `save()` para actualizar`
+
+El método `save()` permite modificar una instancia del modelo y guardar los cambios realizados en la base de datos.
+
+!!! example "Ejemplo: actualización de un `Supplier`"
+
+    === ":octicons-code-16: Código Python"
+
+        ```py hl_lines="3-7"
+        from products.models import Supplier
+
+        supplier = Supplier.objects.get(id=1) #(1)!
+        supplier.email #(2)!
+        supplier.email = "soporte@techstore.cl" #(3)!
+        supplier.save() #(4)!
+        supplier.email #(5)!
+        ```
+
+        1. Obtenemos el proveedor con `id=1` para trabajar con su instancia.
+        2. Consultamos el correo actual.
+        3. Modificamos el correo electrónico del proveedor.
+        4. Guardamos los cambios en la base de datos mediante `save()`.
+        5. Consultamos el correo actualizado para comprobar el cambio.
+
+    === ":octicons-terminal-16: Shell Django"
+
+        ```{ .python .no-copy hl_lines="1 5 7-13" }
+        --8<-- "snippets/outputs/supplier.update.email.save.txt"
+        ```
+
+### :octicons-trash-16: Eliminar
+
+El ORM de Django proporciona el método `delete()` para **eliminar registros** de la base de datos. Al igual que las operaciones anteriores, podemos utilizarlo sobre una instancia específica o sobre un `QuerySet`, dependiendo de si queremos eliminar uno o varios registros.
+
+#### :octicons-check-circle-16: Método `delete()` (eliminar un registro)
+
+Para eliminar un registro específico, podemos obtener primero la instancia mediante `get()` y luego utilizar `delete()`. En el siguiente ejemplo, eliminaremos el `Supplier` con `id=3`:
+
+!!! example "Ejemplo: eliminación de un `Supplier`"
+
+    === ":octicons-code-16: Código Python"
+
+        ```py hl_lines="3-5"
+        from products.models import Supplier
+
+        Supplier.objects.all() #(1)!
+        Supplier.objects.get(id=3).delete() #(2)!
+        Supplier.objects.all() #(3)!
+        ```
+
+        1. Consultamos los `Supplier` almacenados actualmente.
+        2. Obtenemos y eliminamos el `Supplier` con `id=3`.
+        3. Consultamos nuevamente los registros para comprobar la eliminación.
+
+    === ":octicons-terminal-16: Shell Django"
+
+        ```{ .python .no-copy hl_lines="1 5 7-12" }
+        --8<-- "snippets/outputs/supplier.objects.get.delete.txt"
+        ```
+
+#### :octicons-check-circle-16: Método `delete()` (eliminar múltiples registros)
+
+El método `delete()` también puede utilizarse sobre un `QuerySet` para eliminar **varios registros a la vez**. Al utilizarlo junto con `all()`, se eliminan todos los registros del modelo. En este caso, eliminaremos los `Supplier` que aún permanecen en la base de datos:
+
+!!! example "Ejemplo: eliminar múltiples `Supplier`"
+
+    === ":octicons-code-16: Código Python"
+
+        ```py hl_lines="3 5 7"
+        from products.models import Supplier
+
+        Supplier.objects.all() #(1)!
+        Supplier.objects.all().delete() #(2)!
+        Supplier.objects.all() #(3)!
+        ```
+
+        1. Consultamos los `Supplier` almacenados actualmente.
+        2. Eliminamos todos los `Supplier` mediante `delete()`.
+        3. Consultamos nuevamente los registros para comprobar la eliminación.
+
+    === ":octicons-terminal-16: Shell Django"
+
+        ```{ .python .no-copy hl_lines="1 5 7-12" }
+        --8<-- "snippets/outputs/django-shell.txt"
+        >>> from products.models import Supplier
+        >>>
+        >>> Supplier.objects.all()
+        <QuerySet [<Supplier: TechStore>, <Supplier: ElectroMarket>]>
+        >>> Supplier.objects.all().delete()
+        (2, {'products.Supplier': 2})
+        >>> Supplier.objects.all()
+        <QuerySet []>
+        >>> exit()
+        ```
