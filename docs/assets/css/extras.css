@@ -352,9 +352,32 @@ details .tabbed-set,
 }
 
 .highlight .hll {
-  background-color: var(--md-code-hl-color--light);
+  background-color: #00bfa51a;
   box-shadow: 2px 0 0 0 var(--md-accent-fg-color) inset;
 }
+
+.md-typeset .admonition.example,
+.md-typeset details.example {
+  border-color: var(--md-accent-fg-color)
+}
+.md-typeset .admonition.example:focus-within,
+.md-typeset details.example:focus-within {
+  box-shadow:0 0 0 .2rem#00bfa51a
+
+}
+
+.md-typeset .example>.admonition-title,
+.md-typeset .example>summary {
+  background-color: #00bfa51a
+}
+
+.md-typeset .example>.admonition-title:before,
+.md-typeset .example>summary:before {
+  background-color: var(--md-accent-fg-color);
+  -webkit-mask-image:var(--md-admonition-icon--example);
+  mask-image:var(--md-admonition-icon--example)
+}
+
 /* Utilidades */
 .px-1 {
   padding-left: 5px;
