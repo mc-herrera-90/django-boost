@@ -1,6 +1,0 @@
---8<-- "snippets/outputs/django-shell.txt"
->>> from products.models import Product
->>>
->>> producto = Product(name="Notebook", category="Electrónica", price=899990, stock=10)
->>> producto.save()
->>> exit()
