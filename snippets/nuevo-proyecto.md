@@ -50,23 +50,9 @@ A continuación, selecciona tu plataforma y sigue los pasos indicados para confi
 
             ![Activar venv en CMD](../assets/activar-venv-cmd.webp){:.bordered-image}
 
-
-        !!! info "6. Instalar Django en el entorno virtual"
-            
-            Una vez que el entorno virtual está activado, instala Django con el siguiente comando:
-
-            ```powershell title="CMD"
-            pip install django
-            ```
-
-        !!! info "7. Generar un nuevo proyecto de django"
-
-            ```powershell title="CMD"
-            django-admin startproject _site . #(1)!
-            ```
-
-            1. Crea la estructura base del proyecto Django. `_site` puede tener cualquier nombre y contiene la configuración global del proyecto.
-
+        --8<-- "snippets/steps-setup-django/step-6-instalar-django.md"
+        --8<-- "snippets/steps-setup-django/step-7-generar-proyecto"
+        --8<-- "snippets/steps-setup-django/step-8-archivos-del-proyecto.md"
 
     === ":fontawesome-brands-linux: Linux"
 
@@ -74,81 +60,22 @@ A continuación, selecciona tu plataforma y sigue los pasos indicados para confi
             
             Presiona las teclas ++ctrl+alt+t++ o busca **Terminal** en tu lanzador de aplicaciones para abrir una nueva Terminal.
 
-        !!! info "2. Navegar a la ubicación deseada"
-            
-            Una vez que tengas la terminal abierta, usa el comando `cd` para navegar a la carpeta donde deseas crear el proyecto Django. Por ejemplo, ir a __Documentos__:
-
-            ```bash title="Terminal"
-            cd ~/Documents
-            ```
-
-        !!! info "3. Crear la carpeta del proyecto"
-
-            Ejecuta el siguiente comando reemplazando <span class="code-variable" contenteditable="plaintext-only" data-variable="PROJECT" role="textbox" spellcheck="false" aria-label="Nombre del proyecto">mi-proyecto</span> por el nombre que deseas:
-
-            ```powershell title="Terminal"
-            mkdir //PROJECT// #(1)!
-            cd //PROJECT// #(2)!
-            ```
-
-            1. Crea la carpeta del proyecto
-            2. Ingresa a la carpeta creada anteriormente
-
-        !!! info "4. Crear el entorno virtual"
-
-            ```bash title="Terminal"
-            python3 -m venv .venv
-            ```
-
-        !!! info "5. Activar el entorno virtual"
-
-            ```bash title="Terminal"
-            source .venv/bin/activate
-            ```
-
-            Una vez activado, deberías ver `(.venv)` al comienzo de la terminal.
-
-        !!! info "6. Instalar Django en el entorno virtual"
-            
-            Una vez que el entorno virtual está activado, instala Django con el siguiente comando:
-
-            ```powershell title="Terminal"
-            pip install django
-            ```
+        --8<-- "snippets/steps-setup-django/step-2-cambiarse-de-ubicacion.md"
+        --8<-- "snippets/steps-setup-django/step-3-crear-y-acceder-a-carpeta.md"
+        --8<-- "snippets/steps-setup-django/step-4-crear-el-entorno.md"
+        --8<-- "snippets/steps-setup-django/step-5-activar-el-entorno.md"
+        --8<-- "snippets/steps-setup-django/step-6-instalar-django.md"
+        --8<-- "snippets/steps-setup-django/step-7-generar-proyecto"
+        --8<-- "snippets/steps-setup-django/step-8-archivos-del-proyecto.md"
 
     === ":fontawesome-brands-apple: macOS"
         !!! info "1. Abrir la terminal de comandos"
             Presiona ++cmd+space++ para abrir **Spotlight**, luego escribe **terminal** y presiona ++enter++
 
-        !!! info "2. Navegar a la ubicación deseada"
-            Una vez que tengas la terminal abierta, usa el comando `cd` para navegar a la carpeta donde deseas crear el proyecto Django. Por ejemplo, ir a __Documentos__:
-
-            ```bash title="Terminal"
-            cd ~/Documents
-            ```
-
-        !!! info "3. Crear la carpeta del proyecto"
-
-            Ejecuta el siguiente comando reemplazando <span class="code-variable" contenteditable="plaintext-only" data-variable="PROJECT" role="textbox" spellcheck="false" aria-label="Nombre del proyecto">mi-proyecto</span> por el nombre que deseas:
-
-            ```powershell title="Terminal"
-            mkdir //PROJECT// #(1)!
-            cd //PROJECT// #(2)!
-            ```
-
-            3. Crea la carpeta del proyecto
-            4. Ingresa a la carpeta creada anteriormente
-
-        !!! info "4. Crear el entorno virtual"
-
-            ```bash title="Terminal"
-            python3 -m venv .venv
-            ```
-
-        !!! info "5. Activar el entorno virtual"
-
-            ```bash title="Terminal"
-            source .venv/bin/activate
-            ```
-
-            Una vez activado, deberías ver `(.venv)` al comienzo de la terminal.
+        --8<-- "snippets/steps-setup-django/step-2-cambiarse-de-ubicacion.md"
+        --8<-- "snippets/steps-setup-django/step-3-crear-y-acceder-a-carpeta.md"
+        --8<-- "snippets/steps-setup-django/step-4-crear-el-entorno.md"
+        --8<-- "snippets/steps-setup-django/step-5-activar-el-entorno.md"
+        --8<-- "snippets/steps-setup-django/step-6-instalar-django.md"
+        --8<-- "snippets/steps-setup-django/step-7-generar-proyecto"
+        --8<-- "snippets/steps-setup-django/step-8-archivos-del-proyecto.md"
