@@ -252,26 +252,66 @@ document$.subscribe(() => {
 });
 
 document$.subscribe(() => {
-  document
-    .querySelectorAll('[data-md-type="copy"]')
-    .forEach((button) => {
-      const target = button.getAttribute("data-clipboard-target");
+  if (document.body.dataset.copyVenvInitialized) {
+    return;
+  }
 
-      if (!target) {
+  document.body.dataset.copyVenvInitialized = "true";
+
+  document.addEventListener(
+    "click",
+    (event) => {
+      const button = event.target.closest(
+        '[data-md-type="copy"]'
+      );
+
+      if (!button) {
         return;
       }
 
-      const code = document.querySelector(target);
+      const targetSelector = button.getAttribute(
+        "data-clipboard-target"
+      );
+
+      if (!targetSelector) {
+        return;
+      }
+
+      const code = document.querySelector(targetSelector);
 
       if (!code) {
         return;
       }
 
-      const text = code.textContent
-        .replace(/\(\.venv\)\s*/g, "")
-        .trim();
+      const originalTarget = button.getAttribute(
+        "data-clipboard-target"
+      );
 
-      button.setAttribute("data-clipboard-text", text);
-      button.removeAttribute("data-clipboard-target");
-    });
+      const text = code.textContent.replace(
+        /^\(\.venv\)\s*/gm,
+        ""
+      );
+
+      button.setAttribute(
+        "data-clipboard-text",
+        text
+      );
+
+      button.removeAttribute(
+        "data-clipboard-target"
+      );
+
+      setTimeout(() => {
+        button.setAttribute(
+          "data-clipboard-target",
+          originalTarget
+        );
+
+        button.removeAttribute(
+          "data-clipboard-text"
+        );
+      }, 0);
+    },
+    true
+  );
 });
