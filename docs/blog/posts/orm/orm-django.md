@@ -23,11 +23,9 @@ Una de sus principales ventajas es el acceso al **ORM (Object-Relational Mapper)
 
 Django utiliza **Python** como intérprete interactivo por defecto. Sin embargo, también puedes utilizar [**IPython**](https://ipython.org/){target="_blank" rel="noopener"} o [**bpython**](https://bpython-interpreter.org/){target="_blank" rel="noopener"} como alternativas, siempre que estén instalados en el entorno virtual del proyecto.
 
-## Accediendo al Shell de Django
-
 Para acceder al shell de Django, solo necesitas ejecutar el comando `shell` en un proyecto de Django. Para ello, es necesario tener un proyecto configurado y en funcionamiento. Si quieres comenzar a configurar un proyecto desde cero, sigue las instrucciones.
 
-### Instrucciones: nuevo proyecto {#instrucciones}
+## Instrucciones: nuevo proyecto {#instrucciones}
 
 --8<-- "snippets/nuevo-proyecto.md"
 
@@ -152,20 +150,7 @@ Con esto, Django reconocerá `products` como una aplicación perteneciente al pr
 
 Luego generamos una nueva migración con el comando `makemigrations` y corremos las migraciones pendientes con el comando `migrate`:
 
-=== "Comandos"
-    ```bash
-    python manage.py makemigrations #(1)!
-    python manage.py migrate #(2)!
-    ```
-
-    1. Genera una nueva migración que incluirá al modelo `Product` definido anteriormente.
-    2. Ejecuta las migraciones pendiente y crea las tablas en la base de datos.
-
-=== "Output"
-
-    ```{ .plaintext .no-copy hl_lines="1 5" }
-    --8<-- "snippets/outputs/products.0001_initial.txt"
-    ```
+--8<-- "snippets/migrations/products.0001_initial.md"
 
 Con esto, Django crea en **SQLite** la tabla correspondiente al modelo `Product`, dejándola lista para trabajar.
 
@@ -174,7 +159,7 @@ Con esto, Django crea en **SQLite** la tabla correspondiente al modelo `Product`
 Ahora podemos comenzar a realizar operaciones con el modelo `Product` desde el **Shell de Django**:
 
 === "Comando"
-    ```bash title="Terminal"
+    ```bash
     python manage.py shell
     ```
 
@@ -201,21 +186,7 @@ Otra forma de insertar un registro en el modelo `Product` es mediante el método
 
 El siguiente ejemplo muestra su uso:
 
-!!! example "Ejemplo: inserción exitosa con `create()`"
-
-    === ":octicons-code-16: Código Python"
-
-        ```py hl_lines="3"
-        from products.models import Product
-
-        Product.objects.create(name="Teclado", category="Periféricos", price=34990, stock=15)
-        ```
-
-    === ":octicons-terminal-16: Shell Django"
-
-        ```{ .python .no-copy hl_lines="1 5 7 8" }
-        --8<-- "snippets/outputs/product.objects.create.txt"
-        ```
+--8<-- "snippets/examples/orm/product.create.md"
 
 <div class="grid cards" markdown>
 
@@ -267,99 +238,17 @@ En la nueva clase `Supplier`, hemos definido los campos necesarios para represen
 
 Generamos una nueva migración y la aplicamos a la base de datos con el comando `migrate`:
 
-=== "Comandos"
-
-    ```bash
-    python manage.py makemigrations
-    python manage.py migrate
-    ```
-
-=== "Output"
-
-    ```{ .plaintext .no-copy hl_lines="1 5" }
-    --8<-- "snippets/outputs/products.0002_supplier.txt"
-    ```
+--8<-- "snippets/migrations/products.0002_supplier.md"
 
 #### :octicons-plus-circle-16: Método `bulk_create()`
 
 Ahora podemos volver a la Shell de Django e insertar múltiples registros en el modelo `Supplier` utilizando el método `bulk_create()`. Como el campo `product` es obligatorio, primero obtenemos el producto al que estarán asociados los proveedores y luego creamos todos los registros en una sola operación.
 
-!!! example "Ejemplo: insertar múltiples `Supplier` con `bulk_create()`"
-
-    === ":octicons-code-16: Código Python"
-
-        ```py hl_lines="4-22"
-        from products.models import Product, Supplier  # (1)!
-
-        product = Product.objects.get(name="Teclado")  # (2)!
-        Supplier.objects.bulk_create(  # (3)!
-            [
-                Supplier(
-                    name="TechStore",
-                    email="contacto@techstore.cl",
-                    product=product
-                ),
-                Supplier(
-                    name="ElectroMarket",
-                    email="ventas@electromarket.cl",
-                    product=product
-                ),
-                Supplier(
-                    name="Digital World",
-                    email="contacto@digitalworld.cl",
-                    product=product
-                )
-            ]
-        )
-        ```
-
-        1. Importamos los modelos `Product` y `Supplier` que utilizaremos para realizar la inserción.
-        2. Obtenemos el producto `Teclado` que utilizaremos para asociarlo a los proveedores.
-        3. Utilizamos `bulk_create()` para insertar múltiples proveedores en una sola operación.
-
-    === ":octicons-terminal-16: Shell Django"
-
-        ```{ .python .no-copy hl_lines="1 5 7-27" }
-        --8<-- "snippets/outputs/supplier.objects.bulk_create.txt"
-        ```
+--8<-- "snippets/examples/orm/supplier.objects.bulk_create.md"
 
 También podemos utilizar `bulk_create()` directamente con el modelo `Product` para insertar varios productos en una sola operación. En este caso, no necesitamos obtener previamente ningún objeto relacionado, ya que los campos definidos en `Product` son suficientes para crear cada registro.
 
-!!! example "Ejemplo: inserción múltiples `Product` con `bulk_create()`"
-
-    === ":octicons-code-16: Código Python"
-
-        ```py
-        from products.models import Product
-
-        Product.objects.bulk_create(
-            [
-                Product(
-                    name="Monitor",
-                    category="Periféricos",
-                    price=159990,
-                    stock=8
-                ),
-                Product(
-                    name="Webcam",
-                    category="Periféricos",
-                    price=45990,
-                    stock=12
-                ),
-                Product(
-                    name="Audífonos",
-                    category="Audio",
-                    price=29990,
-                    stock=20
-                )
-            ]
-        )
-        ```
-
-    === ":octicons-terminal-16: Shell Django"
-        ```{ .python .no-copy hl_lines="1 5 7-29" }
-        --8<-- "snippets/outputs/product.object.bulk_create.txt"
-        ```
+--8<-- "snippets/examples/orm/product.objects.bulk_create.md"
 
 Ahora que ya hemos guardado objetos en la base de datos, vamos a continuar con la operación de obtener esos registros.
 
@@ -371,22 +260,7 @@ Para **consultar registros** en el ORM de Django utilizamos el **manager `object
 
 El método `all()` nos permite obtener **todos los objetos** del modelo `Supplier` y retorna un `QuerySet` que contiene los registros almacenados en la base de datos:
 
-!!! example "Ejemplo: consulta con `all()`"
-
-    === ":octicons-code-16: Código Python"
-
-        ```py hl_lines="3 4"
-        from products.models import Supplier, Product
-        
-        Supplier.objects.all()
-        Product.objects.all()
-        ```
-
-    === ":octicons-terminal-16: Shell Django"
-
-        ```{ .python .no-copy hl_lines="1 5 7 9" }
-        --8<-- "snippets/outputs/supplier_products.objects.all.txt"
-        ```
+--8<-- "snippets/examples/orm/product.objects.all.md"
 
 <div class="grid cards" markdown>
 
@@ -400,24 +274,27 @@ El método `all()` nos permite obtener **todos los objetos** del modelo `Supplie
 
 </div>
 
+### :octicons-code-16: Obtener datos como diccionario
+
 Como observamos en el resultado de `all()`, obtenemos un **`QuerySet`** con las instancias de los modelos. Para visualizar directamente los **campos y valores** de los registros contenidos en este `QuerySet`, podemos utilizar el método `values()`, que retorna los datos en forma de diccionarios.
 
-!!! example "Ejemplo: obtener los valores con `values()`"
+#### :octicons-check-circle-16: Método `values()`
 
-    === ":octicons-code-16: Código Python"
+El método `values()` permite obtener los registros como **diccionarios con los valores de sus campos**.
 
-        ```py hl_lines="3 4"
-        from products.models import Supplier, Product
-        
-        Supplier.objects.all().values()
-        Product.objects.all().values()
-        ```
+--8<-- "snippets/examples/orm/supplier_products.objects.all.values.md"
 
-    === ":octicons-terminal-16: Shell Django"
+<div class="grid cards" markdown>
 
-        ```{ .python .no-copy hl_lines="1 5 7 9-11 14 16-20" }
-        --8<-- "snippets/outputs/supplier_products.objects.all.values.txt"
-        ```
+!!! success "Resultado"
+
+    Si observamos el resultado en la Shell, `values()` retorna un **`QuerySet`** cuyos elementos son diccionarios con los valores de los campos de cada registro. Por lo tanto, `all()` permite trabajar directamente con los objetos del modelo, mientras que `values()` permite acceder a sus datos mediante las claves de los diccionarios.
+
+!!! tip "Consejo"
+
+    Utiliza el método `values()` cuando necesites obtener los datos de los registros **como diccionarios**, sin trabajar directamente con instancias del modelo. Puedes indicar los campos que deseas incluir en el resultado y combinar `values()` con métodos como `all()`, `filter()` y `exclude()` para determinar qué registros y qué información recuperar.
+
+</div>
 
 #### :octicons-check-circle-16: Método `get()`
 
