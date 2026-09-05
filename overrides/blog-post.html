@@ -1,5 +1,4 @@
 {% extends "main.html" %}
-
 {% import "partials/nav-item.html" as item with context %}
 
 <!-- Page content -->
@@ -58,7 +57,6 @@
 
               <nav class="md-nav">
                 <ul class="md-nav__list">
-
                   <li class="md-nav__item">
                     <div class="md-nav__link accessibility-option">
                       {% include ".icons/material/format-size.svg" %}
@@ -67,7 +65,6 @@
                         Tamaño del texto
                       </span>
                     </div>
-
                     <div class="font-controls">
                       <button type="button" id="font-decrease" title="Reducir tamaño"
                         aria-label="Reducir tamaño">−</button>
@@ -79,13 +76,41 @@
                         aria-label="Aumentar tamaño">+</button>
                     </div>
                   </li>
-
                 </ul>
               </nav>
 
+              <!-- Vista -->
+              <div class="md-post__title">
+                <span class="md-ellipsis">
+                  Vista
+                </span>
+              </div>
+
+              <nav class="md-nav">
+                <ul class="md-nav__list">
+
+                  <li class="md-nav__item">
+                    <button type="button" id="focus-mode" class="md-nav__link view-option" aria-pressed="false">
+                      {% include ".icons/material/target.svg" %}
+                      <span class="md-ellipsis">
+                        Modo concentrado
+                      </span>
+                    </button>
+                  </li>
+
+                  <li class="md-nav__item">
+                    <button type="button" id="toc-mode" class="md-nav__link view-option" aria-pressed="false">
+                      {% include ".icons/material/format-list-bulleted.svg" %}
+                      <span class="md-ellipsis">
+                        Índice compacto
+                      </span>
+                    </button>
+                  </li>
+
+                </ul>
+              </nav>
             </li>
           </ul>
-
 
           <!-- Post metadata -->
           <ul class="md-post__meta md-nav__list">
@@ -190,7 +215,12 @@
       </div>
     </div>
   </div>
-
+  <!-- Restaurar vista -->
+  <button type="button" id="reset-view" class="post-view-reset" aria-label="Volver a la vista normal"
+    title="Volver a la vista normal">
+    {% include ".icons/material/restore.svg" %}
+    <span>Vista normal</span>
+  </button>
   <!-- Page content -->
   <article class="md-content__inner md-typeset">
     {% block content %}
