@@ -25,9 +25,9 @@ Django utiliza **Python** como intérprete interactivo por defecto. Sin embargo,
 
 ## Accediendo al Shell de Django
 
-Para acceder al shell de Django, solo necesitas ejecutar el comando `shell` en un proyecto de Django. Es necesario tener un proyecto de Django configurado y en marcha, si quieres comenzar a configurar un proyecto desde cero, sigue las instrucciones para **la plataforma** correspondiente.
+Para acceder al shell de Django, solo necesitas ejecutar el comando `shell` en un proyecto de Django. Para ello, es necesario tener un proyecto configurado y en funcionamiento. Si quieres comenzar a configurar un proyecto desde cero, sigue las instrucciones.
 
-## Nuevo proyecto
+### Instrucciones: nuevo proyecto {#instrucciones}
 
 --8<-- "snippets/nuevo-proyecto.md"
 
@@ -72,7 +72,7 @@ Sus componentes principales son:
 
 Antes de profundizar en el **Shell de Django** y los **QuerySets del ORM**, debemos crear una aplicación que nos permita definir modelos y realizar operaciones sobre la base de datos.
 
-Asumiendo que ya tienes el proyecto generado siguiendo las [instrucciones](#nuevo-proyecto), podemos crear la aplicación `products` utilizando el archivo `manage.py`:
+Asumiendo que ya tienes el proyecto generado siguiendo las [instrucciones](#instrucciones), podemos crear la aplicación `products` utilizando el archivo `manage.py`:
 
 ```bash title="Terminal"
 python manage.py startapp products
