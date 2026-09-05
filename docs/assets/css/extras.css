@@ -150,6 +150,11 @@ details .tabbed-set,
     box-shadow 0.2s;
 }
 
+/* NAV TABS */
+nav.md-tabs {
+  background: #06574f;
+}
+
 /* TABS */
 .tabbed-set {
     border: 1px solid var(--md-default-fg-color--lightest);
@@ -348,9 +353,13 @@ details .tabbed-set,
 @media screen and (max-width: 768px) {
   .md-typeset .grid.first-grid {
     grid-template-columns: 1fr !important;
+    margin-left: -1em;
+    margin-right: -1em;
   }
 }
-
+.highlight {
+  overflow: auto;
+}
 .highlight .hll {
   background-color: #00bfa51a;
   box-shadow: 2px 0 0 0 var(--md-accent-fg-color) inset;
@@ -382,4 +391,26 @@ details .tabbed-set,
 .px-1 {
   padding-left: 5px;
   padding-right: 5px;
+}
+
+.code-variable {
+  display: inline;
+  padding: 0 0.2em;
+
+  font-family: var(--md-code-font-family);
+  font-size: 0.85em;
+
+  background: var(--md-code-bg-color);
+  border-bottom: 1px dashed currentColor;
+
+  white-space: nowrap;
+  outline: none;
+}
+
+.code-variable:focus {
+  border-bottom-style: solid;
+}
+
+.highlight {
+  overflow: inherit;
 }
