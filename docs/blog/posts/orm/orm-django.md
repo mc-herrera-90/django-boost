@@ -29,11 +29,7 @@ Para acceder al shell de Django, solo necesitas ejecutar el comando `shell` en u
 
 --8<-- "snippets/nuevo-proyecto.md"
 
-Una vez generado el proyecto, tendrás disponible el archivo `manage.py` en el proyecto:
-
---8<-- "snippets/archivos-del-proyecto-starproject.md"
-
-Ahora, podemos ejecutar el siguiente comando para ingresar al shell de Django:
+Ahora, podemos ejecutar el siguiente comando para ingresar al shell de Django.
 
 ```bash title="Terminal"
 python manage.py shell
