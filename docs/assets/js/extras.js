@@ -250,3 +250,28 @@ function findPlaceholder(code, variable) {
 document$.subscribe(() => {
   initCodeVariables();
 });
+
+document$.subscribe(() => {
+  document
+    .querySelectorAll('[data-md-type="copy"]')
+    .forEach((button) => {
+      const target = button.getAttribute("data-clipboard-target");
+
+      if (!target) {
+        return;
+      }
+
+      const code = document.querySelector(target);
+
+      if (!code) {
+        return;
+      }
+
+      const text = code.textContent
+        .replace(/\(\.venv\)\s*/g, "")
+        .trim();
+
+      button.setAttribute("data-clipboard-text", text);
+      button.removeAttribute("data-clipboard-target");
+    });
+});
