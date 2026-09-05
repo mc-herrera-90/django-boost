@@ -12,3 +12,8 @@ MD050:
   style: asterisk
 
 MD046: false
+MD033:
+  allowed_elements:
+    - project-generator
+    - div
+    - a
