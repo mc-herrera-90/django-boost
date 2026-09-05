@@ -1,6 +1,6 @@
 A continuación, selecciona tu plataforma y sigue los pasos indicados para configurar el nuevo proyecto.
 
-???- abstract "Instrucciones para generar un proyecto de Django"
+???- abstract "Ver Instrucciones"
 
     === ":fontawesome-brands-windows: Windows"
         !!! info "1. Abrir el símbolo de sistema"
@@ -27,8 +27,8 @@ A continuación, selecciona tu plataforma y sigue los pasos indicados para confi
             cd //PROJECT// #(2)!
             ```
 
-            1. Crea la carpeta del proyecto
-            2. Ingresa a la carpeta creada anteriormente
+            2. Crea la carpeta del proyecto
+            3. Ingresa a la carpeta creada anteriormente
 
         !!! info "4. Crear el entorno virtual"
 
@@ -38,7 +38,7 @@ A continuación, selecciona tu plataforma y sigue los pasos indicados para confi
             python -m venv .venv #(1)!
             ```
 
-            1. Crea un entorno virtual de Python llamado `.venv`.
+            4. Crea un entorno virtual de Python llamado `.venv`.
 
         !!! info "5. Activar el entorno virtual"
 
@@ -84,11 +84,11 @@ A continuación, selecciona tu plataforma y sigue los pasos indicados para confi
 
         !!! info "3. Crear la carpeta del proyecto"
 
-            Ejecuta el siguiente comando reemplazando `mi-proyecto` por el nombre que deseas:
+            Ejecuta el siguiente comando reemplazando <span class="code-variable" contenteditable="plaintext-only" data-variable="PROJECT" role="textbox" spellcheck="false" aria-label="Nombre del proyecto">mi-proyecto</span> por el nombre que deseas:
 
             ```powershell title="Terminal"
-            mkdir mi-proyecto #(1)!
-            cd mi-proyecto #(2)!
+            mkdir //PROJECT// #(1)!
+            cd //PROJECT// #(2)!
             ```
 
             1. Crea la carpeta del proyecto
