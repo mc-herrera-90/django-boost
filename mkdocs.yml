@@ -10,6 +10,7 @@ extra_javascript:
 
 theme:
   name: material
+  favicon: "assets/favicon.webp"
   custom_dir: overrides
   language: es
 
