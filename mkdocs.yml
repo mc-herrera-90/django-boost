@@ -1,4 +1,5 @@
 site_name: Django Boost
+site_url: https://mcherrera.dev/django-boost
 
 extra_css:
   - assets/css/nerd-font.css
@@ -40,8 +41,8 @@ theme:
 
   features:
     - navigation.tabs
-    - navigation.instant
-    - navigation.instant.prefetch
+    - navigation.instant # navigation.instant.prefetch (pendiente por problemas)
+    - navigation.instant.progress
     - navigation.top
     - navigation.tracking
     - content.code.copy
@@ -77,6 +78,8 @@ plugins:
       post_date_format: short # long | medium | short
       post_url_format: "{slug}"
       archive: false
+  - glightbox:
+      effect: zoom
 
 extra:
   generator: false
