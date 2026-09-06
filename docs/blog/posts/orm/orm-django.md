@@ -66,7 +66,7 @@ Sus componentes principales son:
 
 Antes de profundizar en el **Shell de Django** y los **QuerySets del ORM**, debemos crear una aplicación que nos permita definir modelos y realizar operaciones sobre la base de datos.
 
-Asumiendo que ya tienes el proyecto generado siguiendo las [instrucciones](#instrucciones), podemos crear la aplicación `products` utilizando el archivo `manage.py`:
+Asumiendo que ya tienes el proyecto generado siguiendo las [instrucciones](#instrucciones){ data-preview }, podemos crear la aplicación `products` utilizando el archivo `manage.py`:
 
 ```bash title="Terminal"
 python manage.py startapp products
