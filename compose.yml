@@ -1,6 +1,8 @@
 services:
   mkdocs:
-    image: squidfunk/mkdocs-material:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - "8000:8000"
     volumes:
