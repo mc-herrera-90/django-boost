@@ -1,0 +1,52 @@
+.cmd {
+    max-height: 400px;
+    border: 1px solid #363636;
+    margin-bottom: .4rem;
+
+    pre {
+        margin-top: 0;
+        margin-bottom: 0;
+        
+        .md-code__nav {
+            background-color: #161616;
+            &:hover {
+                background-color: #363636;
+            }
+            button {
+                color: #ddd;
+                &:hover {
+                    color: var(--md-accent-fg-color);
+                }
+            }
+        }
+    }
+    code {
+        background-color: black;
+
+        .n, .nb, .k, .p, .code-placeholder {
+            color: aliceblue;
+        }
+    }
+}
+
+.cmd::before {
+  content: "Símbolo del sistema";
+  color: #000;
+  position: sticky;
+  display: flex;
+  align-items: center;
+  font-family: sans-serif;
+  font-size: .67rem !important;
+  left: 0px;
+  padding: 5px;
+  background-color: #fafafa;
+  background-image: url("../images/icon-cmd.webp");
+  background-size: 20px 20px;
+  background-repeat: no-repeat;
+  background-position: 6px center;
+  padding-left: 30px;
+}
+
+.md-annotation code {
+    background-color: var(--md-default-bg-color);
+}
