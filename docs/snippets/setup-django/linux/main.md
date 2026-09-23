@@ -1,0 +1,10 @@
+=== ":fontawesome-brands-linux: Linux"
+
+    --8<-- "snippets/setup-django/linux/step-1-abrir-terminal.md"
+    --8<-- "snippets/setup-django/linux/step-2-ubicacion-del-proyecto.md"
+    --8<-- "snippets/setup-django/linux/step-3-crear-y-acceder-a-carpeta.md"
+    --8<-- "snippets/setup-django/linux/step-4-crear-el-entorno.md"
+    --8<-- "snippets/setup-django/linux/step-5-activar-el-entorno.md"
+    --8<-- "snippets/setup-django/linux/step-6-instalar-django.md"
+    --8<-- "snippets/setup-django/linux/step-7-generar-proyecto.md"
+    --8<-- "snippets/setup-django/step-8-archivos-del-proyecto.md"

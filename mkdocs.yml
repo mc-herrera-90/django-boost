@@ -4,10 +4,13 @@ site_url: https://mcherrera.dev/django-boost
 extra_css:
   - assets/css/nerd-font.css
   - assets/css/extras.css
+  - assets/css/custom_highlight.css
 
 extra_javascript:
   - assets/js/post-zoom.js
   - assets/js/extras.js
+  - https://unpkg.com/tablesort@5.3.0/dist/tablesort.min.js
+  - assets/js/tablesort.js
 
 theme:
   name: material
@@ -44,9 +47,21 @@ theme:
     - navigation.instant # navigation.instant.prefetch (pendiente por problemas)
     - navigation.instant.progress
     - navigation.top
+    - navigation.footer
     - navigation.tracking
+    - navigation.indexes
     - content.code.copy
     - content.code.annotate
+
+nav:
+  - "Inicio Rápido":
+      - "index.md"
+      - setup/configurar-entorno-virtual.md
+      - setup/instalar-django.md
+      - setup/generar-nuevo-proyecto.md
+      - setup/ejecutar-servidor-de-desarrollo.md
+  - Blog:
+      - blog/index.md
 
 markdown_extensions:
   - abbr
@@ -54,9 +69,13 @@ markdown_extensions:
   - md_in_html
   - admonition
   - pymdownx.details
-  - pymdownx.snippets
   - pymdownx.keys
   - def_list
+  - tables
+  - pymdownx.critic
+  - pymdownx.blocks.caption
+  - pymdownx.snippets:
+      base_path: docs
   - pymdownx.emoji:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
@@ -72,8 +91,12 @@ markdown_extensions:
   - pymdownx.tasklist:
       custom_checkbox: true
 
+exclude_docs: |
+  snippets/**
+
 plugins:
   - search
+  - macros
   - blog:
       post_date_format: short # long | medium | short
       post_url_format: "{slug}"
@@ -83,5 +106,9 @@ plugins:
 
 extra:
   generator: false
+  social:
+    - icon: fontawesome/solid/globe
+      link: https://mcherrera.dev
+      name: mcherrera.dev
 
 copyright: Copyright &copy; 2024 @mcherrera

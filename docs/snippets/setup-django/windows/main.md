@@ -1,0 +1,10 @@
+=== ":fontawesome-brands-windows: Windows"
+
+    --8<-- "snippets/setup-django/windows/step-1-abrir-cmd.md"
+    --8<-- "snippets/setup-django/windows/step-2-ubicacion-del-proyecto.md"
+    --8<-- "snippets/setup-django/windows/step-3-crear-y-moverse-a-carpeta-proyecto.md"
+    --8<-- "snippets/setup-django/windows/step-4-crear-entorno.md"
+    --8<-- "snippets/setup-django/windows/step-5-activar-entorno.md"
+    --8<-- "snippets/setup-django/windows/step-6-instalar-django.md"
+    --8<-- "snippets/setup-django/windows/step-7-generar-proyecto.md"
+    --8<-- "snippets/setup-django/step-8-archivos-del-proyecto.md"

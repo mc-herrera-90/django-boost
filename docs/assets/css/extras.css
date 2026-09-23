@@ -438,3 +438,26 @@ nav.md-tabs {
   max-height: 500px;
   overflow: auto;
 }
+
+.mt-0 .highlighttable {
+  margin-top: 0;
+}
+
+.aws-button {
+  background: #ff9900;
+  border: 1px solid #e88b00;
+  border-radius: 20px;
+  color: #111;
+  padding: 5px 15px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: default;
+}
+
+.md-nav__link .md-ellipsis {
+  white-space: nowrap;
+}
+
+.md-content figure img {
+  border: 2px solid var(--md-primary-fg-color);
+}
