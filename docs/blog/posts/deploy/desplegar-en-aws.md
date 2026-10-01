@@ -592,229 +592,440 @@ Para solucionarlo, procedemos a instalar las herramientas necesarias para compil
 
 Con la instalación anterior, podemos repetir el proceso de instalación de las dependencias del proyecto, comprobando que esta vez finalice correctamente.
 
+--8<-- "snippets/posts/deploy-django-ec2/instalar-dependencias-con-exito.md"
+
+![instalar dependencias con éxito](../assets/aws/30-instalando-las-dependencias-del-proyecto-con-exito.webp)
+/// caption
+**Figura 30**. Confirmar la instalación de las dependencias
+///
+
+???+ tip "Veriricar almacenamiento"
+
+    Durante la instalación de dependencias y paquetes, es recomendable revisar periódicamente el espacio disponible ejecutando:
+
+    === "Comando"
+
+        ```bash
+        df -h /
+        ```
+
+    === "Output"
+
+        ```{ .bash .no-copy }
+        ubuntu@ip-172-31-4-218$ df -h /
+        Filesystem      Size  Used Avail Use% Mounted on
+        /dev/root       6.7G  3.2G  3.5G  48% /
+        ```
+    
+    Para estar consciente del espacio de almacenamiento disponible.
+
+---
+
+## 13. Instalación de MySQL
+
+Como la aplicación Django y la base de datos se ejecutarán en la misma instancia EC2, instalaremos MySQL Server directamente dentro del servidor de ubuntu.
+
+En los repositorios de Ubuntu Server podemos encontrar MySQL Server, ya que se encuentra disponible directamente en los repositorios oficiales de la distribución. Para instalarlo, ejecutamos:
+
+--8<-- "snippets/posts/deploy-django-ec2/instalar-mysql-server.md"
+
+Durante la instalación, `apt` descargará e instalará MySQL Server junto con las dependencias necesarias.
+
+Una vez finalizada la instalación, podemos comprobar que el servicio se encuentre activo:
+
+--8<-- "snippets/posts/deploy-django-ec2/estado-de-mysql-server.md"
+
+Si aparece como `active (running)`, MySQL se encuentra funcionando correctamente y listo para poder conectarse.
+
+![Instalar MySQL y verificar su funcionamiento](../assets/aws/31-instalar-mysql-server-y-verificar-su-funcionamiento.webp)
+/// caption
+**Figura 31**. Instalar MySQL Server y verificar funcionamiento
+///
+
+---
+
+## 14. Configuración de la base de datos y usuario
+
+Para conectar la aplicación Django con MySQL, primero crearemos un usuario y luego la base de datos que utilizará el sistema. Posteriormente, asignaremos al usuario todos los privilegios sobre la base de datos creada.
+
+Primero nos conectamos a MySQL:
+
+```bash title="Terminal"
+sudo mysql
+```
+
+Luego, ejecutamos los siguientes comandos:
+
+
+=== "Comando"
+
+    ```sql
+    CREATE USER 'sgr_user'@'localhost' IDENTIFIED BY 'TU_CONTRASEÑA_SEGURA';
+
+    CREATE DATABASE sgr_db
+
+    GRANT ALL PRIVILEGES ON sgr_db.* TO 'sgr_user'@'localhost';
+
+    FLUSH PRIVILEGES;
+    ```
+
+=== "Output"
+    
+    ```{ .bash .no-copy hl_lines="1 14 17 20 23 26" }
+    ubuntu@ip-172-31-4-218:~$ sudo mysql
+    Welcome to the MySQL monitor.  Commands end with ; or \g.
+    Your MySQL connection id is 9
+    Server version: 8.4.11-0ubuntu0.26.04.1 (Ubuntu)
+
+    Copyright (c) 2000, 2026, Oracle and/or its affiliates.
+
+    Oracle is a registered trademark of Oracle Corporation and/or its
+    affiliates. Other names may be trademarks of their respective
+    owners.
+
+    Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+    mysql> CREATE USER 'sgr_user'@'localhost' IDENTIFIED BY 'proPassword123_';
+    Query OK, 0 rows affected (0.09 sec)
+
+    mysql> CREATE DATABASE sgr_db;
+    Query OK, 1 row affected (0.01 sec)
+
+    mysql> GRANT ALL PRIVILEGES ON sgr_db.* TO 'sgr_user'@'localhost';
+    Query OK, 0 rows affected (0.00 sec)
+
+    mysql> FLUSH PRIVILEGES;
+    Query OK, 0 rows affected (0.01 sec)
+
+    mysql> exit
+    Bye
+    ```
+
+De esta manera, la aplicación Django utilizará `sgr_user` para acceder exclusivamente a la base de datos `sgr_db`, manteniendo separado el acceso de la aplicación respecto del usuario administrativo `root`.
+
+![Configurar usuario y base de datos del sistema](../assets/aws/32-configurar-usuario-y-base-de-datos.webp)
+/// caption
+**Figura 32**. Configurar usuario y base de datos del sistema
+///
+
+---
+
+## 15. Configurar variables de entorno
+
+Ahora debemos comenzar a configurar las variables de entorno para continuar con la inicialización del proyecto y, posteriormente, ejecutar las migraciones para crear las tablas en la base de datos.
+
+El proyecto incluye un archivo :octicons-file-16: `.env.example` como referencia con las variables necesarias. A partir de este archivo, crearemos un archivo :octicons-file-16: `.env` y configuraremos sus valores de acuerdo con el entorno del servidor.
+
 === "Comando"
 
     ```bash
-    (.venv) pip install -r requirements.txt
+    (.venv) cp .env.example .env
+    (.venv) nano .env
     ```
 
 === "Output"
 
-    ```{ .bash .no-copy }
-    Collecting asgiref==3.12.1 (from -r requirements.txt (line 1))
-    Using cached asgiref-3.12.1-py3-none-any.whl.metadata (9.4 kB)
-    Collecting certifi==2026.7.22 (from -r requirements.txt (line 2))
-    Using cached certifi-2026.7.22-py3-none-any.whl.metadata (2.5 kB)
-    Collecting cfgv==3.5.0 (from -r requirements.txt (line 3))
-    Using cached cfgv-3.5.0-py2.py3-none-any.whl.metadata (8.9 kB)
-    Collecting charset-normalizer==3.5.1 (from -r requirements.txt (line 4))
-    Using cached charset_normalizer-3.5.1-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (45 kB)
-    Collecting click==8.5.0 (from -r requirements.txt (line 5))
-    Using cached click-8.5.0-py3-none-any.whl.metadata (2.6 kB)
-    Collecting cssbeautifier==2.0.3 (from -r requirements.txt (line 6))
-    Using cached cssbeautifier-2.0.3-py3-none-any.whl.metadata (459 bytes)
-    Collecting distlib==0.4.3 (from -r requirements.txt (line 7))
-    Using cached distlib-0.4.3-py2.py3-none-any.whl.metadata (5.3 kB)
-    Collecting Django==6.1.1 (from -r requirements.txt (line 8))
-    Using cached django-6.1.1-py3-none-any.whl.metadata (3.9 kB)
-    Collecting django-admin-interface==0.32.0 (from -r requirements.txt (line 9))
-    Using cached django_admin_interface-0.32.0-py3-none-any.whl.metadata (17 kB)
-    Collecting django-apptemplates==1.5 (from -r requirements.txt (line 10))
-    Using cached django-apptemplates-1.5.tar.gz (5.1 kB)
-    Installing build dependencies ... done
-    Getting requirements to build wheel ... done
-    Preparing metadata (pyproject.toml) ... done
-    Collecting django-colorfield==0.14.0 (from -r requirements.txt (line 11))
-    Using cached django_colorfield-0.14.0-py3-none-any.whl.metadata (11 kB)
-    Collecting djlint==1.46.1 (from -r requirements.txt (line 12))
-    Using cached djlint-1.46.1-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (9.1 kB)
-    Collecting EditorConfig==0.17.1 (from -r requirements.txt (line 13))
-    Using cached editorconfig-0.17.1-py3-none-any.whl.metadata (3.9 kB)
-    Collecting filelock==3.32.6 (from -r requirements.txt (line 14))
-    Using cached filelock-3.32.6-py3-none-any.whl.metadata (2.0 kB)
-    Collecting identify==2.6.19 (from -r requirements.txt (line 15))
-    Using cached identify-2.6.19-py2.py3-none-any.whl.metadata (4.4 kB)
-    Collecting idna==3.19 (from -r requirements.txt (line 16))
-    Using cached idna-3.19-py3-none-any.whl.metadata (9.2 kB)
-    Collecting jsbeautifier==2.0.3 (from -r requirements.txt (line 17))
-    Using cached jsbeautifier-2.0.3-py3-none-any.whl.metadata (481 bytes)
-    Collecting json5==0.15.0 (from -r requirements.txt (line 18))
-    Using cached json5-0.15.0-py3-none-any.whl.metadata (37 kB)
-    Collecting mysqlclient==2.2.8 (from -r requirements.txt (line 19))
-    Using cached mysqlclient-2.2.8.tar.gz (92 kB)
-    Installing build dependencies ... done
-    Getting requirements to build wheel ... done
-    Preparing metadata (pyproject.toml) ... done
-    Collecting nodeenv==1.10.0 (from -r requirements.txt (line 20))
-    Downloading nodeenv-1.10.0-py2.py3-none-any.whl.metadata (24 kB)
-    Collecting pathspec==1.1.1 (from -r requirements.txt (line 21))
-    Downloading pathspec-1.1.1-py3-none-any.whl.metadata (14 kB)
-    Collecting pillow==12.3.0 (from -r requirements.txt (line 22))
-    Downloading pillow-12.3.0-cp314-cp314-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (9.1 kB)
-    Collecting platformdirs==4.11.8 (from -r requirements.txt (line 23))
-    Downloading platformdirs-4.11.8-py3-none-any.whl.metadata (5.5 kB)
-    Collecting pre_commit==4.6.2 (from -r requirements.txt (line 24))
-    Downloading pre_commit-4.6.2-py2.py3-none-any.whl.metadata (1.2 kB)
-    Collecting python-decouple==3.8 (from -r requirements.txt (line 25))
-    Downloading python_decouple-3.8-py3-none-any.whl.metadata (14 kB)
-    Collecting python-discovery==1.6.0 (from -r requirements.txt (line 26))
-    Downloading python_discovery-1.6.0-py3-none-any.whl.metadata (5.1 kB)
-    Collecting python-slugify==8.0.4 (from -r requirements.txt (line 27))
-    Downloading python_slugify-8.0.4-py2.py3-none-any.whl.metadata (8.5 kB)
-    Collecting PyYAML==6.0.3 (from -r requirements.txt (line 28))
-    Downloading pyyaml-6.0.3-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.4 kB)
-    Collecting regex==2026.9.10 (from -r requirements.txt (line 29))
-    Downloading regex-2026.9.10-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (40 kB)
-    Collecting requests==2.34.2 (from -r requirements.txt (line 30))
-    Downloading requests-2.34.2-py3-none-any.whl.metadata (4.8 kB)
-    Collecting sqlparse==0.6.0 (from -r requirements.txt (line 31))
-    Downloading sqlparse-0.6.0-py3-none-any.whl.metadata (6.0 kB)
-    Collecting text-unidecode==1.3 (from -r requirements.txt (line 32))
-    Downloading text_unidecode-1.3-py2.py3-none-any.whl.metadata (2.4 kB)
-    Collecting urllib3==2.7.0 (from -r requirements.txt (line 33))
-    Downloading urllib3-2.7.0-py3-none-any.whl.metadata (6.9 kB)
-    Collecting virtualenv==21.7.9 (from -r requirements.txt (line 34))
-    Downloading virtualenv-21.7.9-py3-none-any.whl.metadata (3.5 kB)
-    Downloading asgiref-3.12.1-py3-none-any.whl (25 kB)
-    Downloading certifi-2026.7.22-py3-none-any.whl (136 kB)
-    Downloading cfgv-3.5.0-py2.py3-none-any.whl (7.4 kB)
-    Downloading charset_normalizer-3.5.1-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (251 kB)
-    Downloading click-8.5.0-py3-none-any.whl (125 kB)
-    Downloading cssbeautifier-2.0.3-py3-none-any.whl (122 kB)
-    Downloading distlib-0.4.3-py2.py3-none-any.whl (470 kB)
-    Downloading django-6.1.1-py3-none-any.whl (8.4 MB)
-    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 8.4/8.4 MB 143.8 MB/s eta 0:00:00
-    Downloading django_admin_interface-0.32.0-py3-none-any.whl (266 kB)
-    Downloading django_colorfield-0.14.0-py3-none-any.whl (34 kB)
-    Downloading python_slugify-8.0.4-py2.py3-none-any.whl (10 kB)
-    Downloading djlint-1.46.1-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (1.4 MB)
-    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.4/1.4 MB 87.3 MB/s eta 0:00:00
-    Downloading editorconfig-0.17.1-py3-none-any.whl (16 kB)
-    Downloading filelock-3.32.6-py3-none-any.whl (100 kB)
-    Downloading identify-2.6.19-py2.py3-none-any.whl (99 kB)
-    Downloading idna-3.19-py3-none-any.whl (68 kB)
-    Downloading jsbeautifier-2.0.3-py3-none-any.whl (93 kB)
-    Downloading json5-0.15.0-py3-none-any.whl (36 kB)
-    Downloading nodeenv-1.10.0-py2.py3-none-any.whl (23 kB)
-    Downloading pathspec-1.1.1-py3-none-any.whl (57 kB)
-    Downloading pillow-12.3.0-cp314-cp314-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (6.9 MB)
-    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.9/6.9 MB 110.1 MB/s eta 0:00:00
-    Downloading platformdirs-4.11.8-py3-none-any.whl (24 kB)
-    Downloading pre_commit-4.6.2-py2.py3-none-any.whl (226 kB)
-    Downloading python_decouple-3.8-py3-none-any.whl (9.9 kB)
-    Downloading python_discovery-1.6.0-py3-none-any.whl (38 kB)
-    Downloading pyyaml-6.0.3-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (794 kB)
-    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 794.2/794.2 kB 45.7 MB/s eta 0:00:00
-    Downloading regex-2026.9.10-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (803 kB)
-    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 803.7/803.7 kB 37.6 MB/s eta 0:00:00
-    Downloading requests-2.34.2-py3-none-any.whl (73 kB)
-    Downloading urllib3-2.7.0-py3-none-any.whl (131 kB)
-    Downloading sqlparse-0.6.0-py3-none-any.whl (50 kB)
-    Downloading text_unidecode-1.3-py2.py3-none-any.whl (78 kB)
-    Downloading virtualenv-21.7.9-py3-none-any.whl (5.3 MB)
-    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.3/5.3 MB 137.8 MB/s eta 0:00:00
-    Building wheels for collected packages: django-apptemplates, mysqlclient
-    Building wheel for django-apptemplates (pyproject.toml) ... done
-    Created wheel for django-apptemplates: filename=django_apptemplates-1.5-py3-none-any.whl size=5556 sha256=b9aed6c627fa2c80cc230923ff440e302d0e6f219a9e7012dbe41c242a94a6f7
-    Stored in directory: /home/ubuntu/.cache/pip/wheels/4e/60/7b/1033ba51a7e8385d5d0966bf36fe04ea5ea781a890b12b131c
-    Building wheel for mysqlclient (pyproject.toml) ... done
-    Created wheel for mysqlclient: filename=mysqlclient-2.2.8-cp314-cp314-linux_x86_64.whl size=130157 sha256=8075aa3aea7047c3ccde122c7e0f59ee13df7c553bde99d4552fea75c07ed9c4
-    Stored in directory: /home/ubuntu/.cache/pip/wheels/dc/6c/f2/d2b7580418272e66d38459c09d5bf1f10b3bf9dbe12a79918a
-    Successfully built django-apptemplates mysqlclient
-    Installing collected packages: text-unidecode, python-decouple, django-apptemplates, distlib, urllib3, sqlparse, regex, PyYAML, python-slugify, platformdirs, pillow, pathspec, nodeenv, mysqlclient, json5, idna, identify, filelock, EditorConfig, click, charset-normalizer, cfgv, certifi, asgiref, requests, python-discovery, jsbeautifier, django-colorfield, Django, virtualenv, django-admin-interface, cssbeautifier, pre_commit, djlint
-    Successfully installed Django-6.1.1 EditorConfig-0.17.1 PyYAML-6.0.3 asgiref-3.12.1 certifi-2026.7.22 cfgv-3.5.0 charset-normalizer-3.5.1 click-8.5.0 cssbeautifier-2.0.3 distlib-0.4.3 django-admin-interface-0.32.0 django-apptemplates-1.5 django-colorfield-0.14.0 djlint-1.46.1 filelock-3.32.6 identify-2.6.19 idna-3.19 jsbeautifier-2.0.3 json5-0.15.0 mysqlclient-2.2.8 nodeenv-1.10.0 pathspec-1.1.1 pillow-12.3.0 platformdirs-4.11.8 pre_commit-4.6.2 python-decouple-3.8 python-discovery-1.6.0 python-slugify-8.0.4 regex-2026.9.10 requests-2.34.2 sqlparse-0.6.0 text-unidecode-1.3 urllib3-2.7.0 virtualenv-21.7
+    ```{.bash .no-copy hl_lines="1 5-9 11"}
+    ubuntu@ip-172-31-4-218:/var/www/proyecto-sgr-delegaciones$ nano .env
+    ┌──────────────────────────────────────────────────┐
+    │ GNU nano 8.7.1          .env                   ◀ Archivo .env     
+    ├──────────────────────────────────────────────────┤
+    │ DB_NAME=sgr_db                                 ◀ Nombre de la base se datos
+    │ DB_USER=sgr_user                               ◀ Nombre del usuario de MySQL
+    │ DB_PASSWORD=proPassword123_                    ◀ Password del usuario de MySQL      
+    │ DB_HOST=127.0.0.1                              ◀ Host de MySQL (dentro de ec2) 
+    │ DB_PORT=3306                                   ◀ Puerto de MySQL (es predeterminado) 
+    │ ENDPOINT_SERVICE_DRIVE=                        ◀ Servicio externo (opcional)
+    │ ALLOWED_HOSTS=localhost,127.0.0.1,3.230.65.250 ◀ Hosts permitidos para la aplicación
+    └──────────────────────────────────────────────────┘
     ```
 
-## 13. Instalación de MySQL
+|   Combinaciones en Nano     ||
+| ---------- | --------- |
+| ++ctrl+o++ | Guardar ( ++enter++ para confirmar ) |
+| ++ctrl+x++ | Salir     |
+
+![Configuración de las variables de entorno](../assets/aws/33-configurar-variables-de-entorno-de-mysql.webp)
+/// caption
+**Figura 33**. Configuración de las variables de entorno
+///
 
 ---
 
-## Configurar variables de entorno
+## 16. Ejecutar las migraciones
 
-Editamos el archivo :octicons-file-code-16: `.env.example` para añadir la IP Pública.
+Con las variables de entorno configuradas, ejecutamos las migraciones de Django para crear las tablas necesarias en la base de datos MySQL.
 
-```{ .env }
-ALLOWED_HOSTS = ['tu-ip-publica']
-```
+--8<-- "snippets/posts/deploy-django-ec2/ejecutar-migraciones.md"
 
-- Ejecuta las migraciones y recopilar los archivos estáticos.
+Este comando aplica las migraciones pendientes del proyecto y crea la estructura de la base de datos definida por los modelos de las aplicaciones.
 
-```bash title="Terminal"
-python manage.py migrate
-python manage.py collectstatic
-```
+![Configuración de las variables de entorno](../assets/aws/34-ejecutar-migraciones-y-verificar-en-mysql.webp)
+/// caption
+**Figura 34**. Ejecutar migraciones y verificar en MySQL
+///
 
 ---
 
+## 17. Probar la aplicación
 
-## 14. Configurar Gunicorn como Servicio Systemd
+Antes de probar la aplicación, debemos permitir el acceso al puerto `8000` desde el **Grupo de Seguridad** asociado a la instancia EC2. Para ello, agregamos una regla de entrada para dicho puerto.
 
-- Creamos un archivo de servicio para que Gunicorn ejecute la aplicación en segundo plano:
+![Agregar puerto al grupo de seguridad](../assets/aws/35-agregar-puerto-en-las-reglas-de-entrada-para-probar-app.webp)
+/// caption
+**Figura 35**. Agregar nueva regla de entrada en el Grupo de Seguridad asociado a la instancia
+///
+
+Para realizar una prueba de funcionamiento, ejecutamos temporalmente el servidor de desarrollo con `runserver`:
+
+=== "Comando"
+
+    ```bash
+    python manage.py runserver 0.0.0.0:8000
+    ```
+=== "Output"
+
+    ```{.bash .no-copy hl_lines="1 8"}
+    (.venv) ubuntu@ip-172-31-4-218:/var/www/proyecto-sgr-delegaciones$ python manage.py runserver 0.0.0.0:8000
+    Watching for file changes with StatReloader
+    Performing system checks...
+
+    System check identified no issues (0 silenced).
+    September 27, 2026 - 18:49:21
+    Django version 6.1.1, using settings '_site.settings'
+    Starting WSGI development server at http://0.0.0.0:8000/
+    Quit the server with CONTROL-C.
+
+    WARNING: This is a development server. Do not use it in a production setting. Use a production WSGI or ASGI server instead.
+    For more information on production servers see: https://docs.djangoproject.com/en/6.1/howto/deployment/
+    [27/Sep/2026 18:49:34] "GET / HTTP/1.1" 302 0
+    [27/Sep/2026 18:49:35] "GET /accounts/login/?next=/ HTTP/1.1" 200 2652
+    [27/Sep/2026 18:49:35] "GET /static/css/variables.css HTTP/1.1" 200 166
+    [27/Sep/2026 18:49:35] "GET /static/css/login.css HTTP/1.1" 200 5600
+    [27/Sep/2026 18:49:35] "GET /static/js/forms.js HTTP/1.1" 200 1332
+    [27/Sep/2026 18:49:35] "GET /static/css/libs/fa.7.3.1.all.min.css HTTP/1.1" 200 90336
+    [27/Sep/2026 18:49:35] "GET /static/img/left-bg.webp HTTP/1.1" 200 40816
+    [27/Sep/2026 18:49:36] "GET /static/css/webfonts/fa-solid-900.woff2 HTTP/1.1" 200 119488
+    ```
+Luego, accedemos desde el navegador a la IP pública de la instancia usando `http`. Por ejemplo: `http://3.230.65.250:8000/`
+
+De esta forma, comprobamos que la aplicación funciona correctamente antes de continuar con la configuración de Gunicorn y Nginx.
+
+![prueba de funcionamiento](../assets/aws/36-probar-funcionamiento-de-la-aplicacion.webp)
+/// caption
+**Figura 36**. Comprobación de funcionamiento de la aplicación
+///
+
+## 18. Configurar Gunicorn como Servicio Systemd
+
+Configuramos **Gunicorn** como servidor de aplicaciones para ejecutar el proyecto Django en el servidor.
+
+A diferencia del servidor de desarrollo que ejecutamos con `runserver`, Gunicorn es un servidor de aplicaciones, por lo que no se encarga de servir los archivos estáticos de la aplicación, aunque estos hayan sido generados mediante el comando `python manage.py collectstatic`.
+
+Entonces, ejecutamos Gunicorn directamente para comprobar que pueda iniciar y atender las peticiones de Django:
+
+=== "Comando"
+
+    ```python
+    gunicorn \
+    --bind 0.0.0.0:8000 \#(1)!
+    --access-logfile - \#(2)!
+    _site.wsgi:application#(3)!
+    ```
+
+    1. Dirección y puerto de escucha.
+    2. Registra las peticiones HTTP.
+    3. **Indica la aplicación WSGI de Django**; reemplaza `_site` por el nombre del proyecto utilizado al ejecutar `django-admin startproject`.
+
+=== "Output"
+
+    ```{.bash .no-copy hl_lines="1-4"}
+    (.venv) ubuntu@ip-172-31-4-218:/var/www/proyecto-sgr-delegaciones$ gunicorn \
+    --bind 0.0.0.0:8000 \
+    --access-logfile - \
+    _site.wsgi:application
+    [2026-09-28 01:29:21 +0000] [2010] [INFO] Starting gunicorn 26.2.0
+    [2026-09-28 01:29:21 +0000] [2010] [INFO] Listening at: http://0.0.0.0:8000 (2010)
+    [2026-09-28 01:29:21 +0000] [2010] [INFO] Using worker: sync
+    [2026-09-28 01:29:21 +0000] [2011] [INFO] Booting worker with pid: 2011
+    [2026-09-28 01:29:21 +0000] [2010] [INFO] Control socket listening at /run/user/1000/gunicorn.ctl
+    179.60.64.130 - - [27/Sep/2026:22:29:30 -0300] "GET /accounts/login/?next=/ HTTP/1.1" 200 2652 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36"
+    Not Found: /static/css/variables.css
+    179.60.64.130 - - [27/Sep/2026:22:29:30 -0300] "GET /static/css/variables.css HTTP/1.1" 404 3243 "http://3.230.65.250:8000/accounts/login/?next=/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36"
+    Not Found: /static/css/libs/fa.7.3.1.all.min.css
+    179.60.64.130 - - [27/Sep/2026:22:29:30 -0300] "GET /static/css/libs/fa.7.3.1.all.min.css HTTP/1.1" 404 3279 "http://3.230.65.250:8000/accounts/login/?next=/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36"
+    Not Found: /static/css/login.css
+    179.60.64.130 - - [27/Sep/2026:22:29:31 -0300] "GET /static/css/login.css HTTP/1.1" 404 3231 "http://3.230.65.250:8000/accounts/login/?next=/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36"
+    Not Found: /static/js/forms.js
+    179.60.64.130 - - [27/Sep/2026:22:29:31 -0300] "GET /static/js/forms.js HTTP/1.1" 404 3225 "http://3.230.65.250:8000/accounts/login/?next=/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36"
+    Not Found: /favicon.ico
+    179.60.64.130 - - [27/Sep/2026:22:29:31 -0300] "GET /favicon.ico HTTP/1.1" 404 3204 "http://3.230.65.250:8000/accounts/login/?next=/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36"
+    ```
+
+![prueba de funcionamiento de gunicorn](../assets/aws/37-probar-gunicorn-como-servidor-de-aplicaciones.webp)
+/// caption
+**Figura 36**. Probando Gunicorn como servidor de aplicaciones
+///
+
+Una vez probado Gunicorn, lo configuramos como un servicio para mantenerlo disponible de forma permanente. Esto es fundamental para que posteriormente **Nginx pueda actuar como servidor proxy inverso**, recibiendo las peticiones y derivándolas hacia Gunicorn.
+
+Para entender mejor el contexto, el esquema de comunicación sería:
+
+![flujo de la aplicación](../assets/aws/38-flujo-de-aplicacion-en-produccion.webp)
+/// caption
+**Figura 38**. Flujo de comunicación entre Nginx, Gunicorn, Django y MySQL
+///
+
+Primero detenemos el Gunicorn que dejamos ejecutándose manualmente con ++ctrl+c++.
+
+Luego creamos el archivo `gunicorn.service` para agregar la configuración:
 
 ```bash title="Terminal"
 sudo nano /etc/systemd/system/gunicorn.service
 ```
 
-- Reemplaza `/ruta/a/tu/proyecto` y `tu_proyecto`
+Reemplaza `</ruta/a/tu/proyecto>` y `<tu_proyecto>` con los valores reales.
 
-```ini title="gunicorn.service"
+```ini title="gunicorn.service" hl_lines="3 6-12 15" linenums="1"
 [Unit]
-Description=gunicorn daemon for Django
-After=network.target
+Description=Gunicorn daemon for Django
+After=network.target#(1)!
 
 [Service]
-User=ubuntu
-WorkingDirectory=/ruta/a/tu/proyecto
-ExecStart=/ruta/a/tu/proyecto/venv/bin/gunicorn \
-          --access-logfile - \
-          --workers 3 \
-          --bind unix:/ruta/a/tu/proyecto/tu_proyecto.sock \
-          tu_proyecto.wsgi:application
+User=ubuntu#(2)!
+Group=www-data#(3)!
+WorkingDirectory=</ruta/a/tu/proyecto>#(4)!
+ExecStart=</ruta/a/tu/proyecto>/venv/bin/gunicorn \#(5)!
+    --workers 3 \
+    --bind unix:</ruta/a/tu/proyecto>/tu_proyecto.sock \
+    <tu_proyecto>.wsgi:application
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=multi-user.target#(6)!
 ```
 
-- Instalar y habilitar el servicio
+1. **`After=network.target`**: Indica que systemd debe iniciar Gunicorn después de que la red del sistema haya sido levantada.
+2. **`User=ubuntu`**: Gunicorn se ejecuta como el usuario ubuntu (o el usuario que tenga tu ec2).
+3. **`Group=www-data`**: El proceso pertenece al grupo `www-data`. Esto facilita que **Nginx** pueda acceder al socket de Gunicorn
+4. **`WorkingDirectory=`**: Indica desde qué directorio se ejecutará Gunicorn. En nuestro caso es:<br/>`/var/www/proyecto-sgr-delegaciones`.
+5. **`ExecStart=`** Indica el comando que systemd debe ejecutar para iniciar Gunicorn. En nuestro caso es:<br/>`/var/www/proyecto-sgr-delegaciones/.venv/bin/gunicorn`.<br/><br/>**`--workers 3`**: Indica que Gunicorn ejecutará 3 procesos workers para atender las solicitudes de tu aplicación Django.<br/><br/>**`--bind unix`**: Indica dónde Gunicorn va a crear el socket Unix que permitirá que Nginx se comunique con Gunicorn.<br/><br/>**`<tu_proyecto>.wsgi:application`**: Le dice a Gunicorn qué aplicación Django debe ejecutar. En nuestro caso el dirtectorio del proyecto es `_site`, por ende quedaría como `_site.wsgi:application`
+6. **`WantedBy=multi-user.target`**: Le indica a systemd que el servicio Gunicorn debe quedar asociado al arranque normal de un servidor Linux.
+
+
+Luego, debemos recargar la configuración de `systemd`.
+
+```bash title="Terminal"
+sudo systemctl daemon-reload
+```
+
+Esto permite que systemd reconozca el archivo `gunicorn.service`.
+
+Ahora iniciamos y habilitamos el servicio de Gunicorn.
 
 ```bash title="Terminal"
 sudo systemctl start gunicorn
 sudo systemctl enable gunicorn
 ```
 
+Revisamos que se encuentra operativo.
+
+=== "Comando"
+    
+    ```bash
+    sudo systemctl status gunicorn
+    ```
+
+=== "Output"
+
+    ```{.bash .no-copy hl_lines="4"}
+    ubuntu@ip-172-31-4-218:~$ sudo systemctl status gunicorn
+    ● gunicorn.service - Gunicorn daemon for SGR
+        Loaded: loaded (/etc/systemd/system/gunicorn.service; enabled; preset: enabled)
+        Active: active (running) since Mon 2026-09-28 02:46:41 UTC; 51s ago
+    Invocation: 6dcd0e4ff21e4fa6ae2eec0b224a1b57
+    Main PID: 638 (gunicorn)
+        Tasks: 5 (limit: 627)
+        Memory: 122.1M (peak: 126.7M)
+            CPU: 1.550s
+        CGroup: /system.slice/gunicorn.service
+                ├─638 /var/www/proyecto-sgr-delegaciones/.venv/bin/python3 /var/www/proyecto-sgr-delegaciones/>
+                ├─852 /var/www/proyecto-sgr-delegaciones/.venv/bin/python3 /var/www/proyecto-sgr-delegaciones/>
+                ├─865 /var/www/proyecto-sgr-delegaciones/.venv/bin/python3 /var/www/proyecto-sgr-delegaciones/>
+                └─879 /var/www/proyecto-sgr-delegaciones/.venv/bin/python3 /var/www/proyecto-sgr-delegaciones/>
+    ```
+
+![configurar gunicorn como servicio](../assets/aws/39-configurar-guniucorn-como-servicio.webp)
+/// caption
+**Figura 39**. Configurando Gunicorn como servicio
+///
+
 ---
 
-## 15. Configurar NGINX como proxy inverso
+## 19. Configurar NGINX como proxy inverso
 
-- Crea un archivo de configuración de Nginx para el sitio.
+Una vez configurado Gunicorn como servicio, continuamos con la configuración de **NGINX** como proxy inverso. Este se encargará de recibir las solicitudes del cliente, servir los archivos estáticos y derivar las peticiones dinámicas hacia Gunicorn.
+
+Primero instalamos NGINX en la instancia:
+
+```bash title="Terminal"
+sudo apt install nginx -y
+```
+
+Después verificamos que el servicio se encuentre operativo y lo habilitamos.
+
+```bash title="Terminal"
+sudo systemctl status nginx
+sudo systemctl enable nginx
+```
+
+Creamos un archivo de configuración de Nginx para el sitio.
 
 ```bash title="Terminal"
 sudo nano /etc/nginx/sites-available/django
 ```
 
-- Añade el siguiente bloque remplazando los valores para el proyecto.
+Ahora el siguiente bloque remplazando `</ruta/a/tu/proyecto/>` por los valores para el proyecto.
 
-```nginx title="django"
+```nginx title="/etc/nginx/sites-available/django" linenums="1" hl_lines="3 6 10 14"
 server {
     listen 80;
-    server_name tu-ip-publica-o-dominio;
+    server_name ip-publica-del-ec2;
 
-    location = /favicon.ico { access_log off; log_not_found off; }
     location /static/ {
-        alias /ruta/a/tu/proyecto/static/;
+        alias /ruta/a/tu/proyecto/staticfiles/;
+    }
+
+    location /media/ {
+        alias /ruta/a/tu/proyecto/media/;
     }
 
     location / {
-        include proxy_params;
-        proxy_pass http://unix:/ruta/a/tu/proyecto/tu_proyecto.sock;
+        proxy_pass http://127.0.0.1:8000;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
     }
 }
 ```
 
-- Habilita el sitio y reinicia NGINX.
+Ahora, se habilita el sitio y reinicia NGINX.
 
 ```bash title="Terminal"
 sudo ln -s /etc/nginx/sites-available/django /etc/nginx/sites-enabled/
 sudo nginx -t
 sudo systemctl restart nginx
 ```
+
+![configurar nginx](../assets/aws/40-configurar-nginx-como-proxy-inverso.webp)
+/// caption
+**Figura 40**. Configurando Nginx como proxy inverso
+///
+
+Finalmente, podemos comprobar que la aplicación se encuentra operativa desde la IP pública.
+
+![configurar nginx](../assets/aws/41-aplicacion-operativa-en-ip-publica.webp)
+/// caption
+**Figura 41**. Aplicación operativa en la IP pública
+///
