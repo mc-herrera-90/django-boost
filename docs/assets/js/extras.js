@@ -315,3 +315,32 @@ document$.subscribe(() => {
     true
   );
 });
+
+document.addEventListener("click", (event) => {
+  const openButton = event.target.closest("[data-modal-open]");
+
+  if (openButton) {
+    const modal = document.getElementById(
+      openButton.dataset.modalOpen
+    );
+
+    modal?.showModal();
+  }
+
+  if (event.target.closest(".speakerdeck-modal__close")) {
+    event.target.closest("dialog")?.close();
+  }
+});
+
+document.addEventListener("click", (event) => {
+  if (event.target.matches(".speakerdeck-modal")) {
+    event.target.close();
+  }
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    document.querySelectorAll(".speakerdeck-modal[open]")
+      .forEach((modal) => modal.close());
+  }
+});
