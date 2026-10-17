@@ -3,16 +3,18 @@ title: Lanzar el servidor
 icon: material/server
 ---
 
+# Lanzar el servidor de desarrollo
+
 Una vez creado el proyecto, inicia el servidor de desarrollo con el siguiente comando:
 
 Para verificar que nuestro proyecto funcione. Cambiamos al directorio del proyecto generado, y dentro ejecutamos el siguiente comando:
 
-=== "Ejecutar el servidor"
-	```bash title="bash"
+=== "Comando"
+	```bash
 	python manage.py runserver
 	```
-=== "Salida"
-	```plaintext
+=== "Output"
+	```{ .plaintext .no-copy hl_lines="10" }
 	Watching for file changes with StatReloader
 	Performing system checks...
 	
@@ -40,6 +42,6 @@ Para verificar que nuestro proyecto funcione. Cambiamos al directorio del proyec
 
     El servidor de desarrollo recarga automáticamente el código Python para cada solicitud según sea necesario. Sin embargo, algunas cosas como agregar nuevos archivos no activan el reinicio, por lo que tendríamos que reiniciar el servidor.
 
-Si visitamos <http://127.0.0.1:8080/> veremos la página por defecto de nuestro sitio con django.
+Si accedemos a <http://127.0.0.1:8080/>, veremos la página de bienvenida predeterminada de Django.
 
-![Página por defecto de Django](assets/images/django-project-start.png){style="border: 1px solid #ccc"}
+![Página por defecto de Django](../assets/images/preview-project.webp)

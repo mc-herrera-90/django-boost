@@ -3,9 +3,9 @@ title: Instalar Django
 icon: material/rocket
 ---
 
-## Con pip (recomendado)
+# Instalar Django en el Entorno Virtual
 
-Una vez que el [entorno virtual está configurado y activado](configurar-entorno-virtual.md){data-preview}, instala Django con pip:
+Una vez con [el entorno virtual configurado y activado](configurar-entorno-virtual.md){data-preview}, instalamos Django con pip:
 
 --8<-- "snippets/commands/pip-install-django.md"
 
