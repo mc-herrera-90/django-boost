@@ -161,7 +161,16 @@ nav.md-tabs {
 
 /* TABS */
 .tabbed-set {
+  overflow: hidden;
+}
+
+
+.tabbed-labels {
     border: 1px solid var(--md-default-fg-color--lightest);
+}
+.tabbed-set .tabbed-content p {
+  padding-left: .5em ;
+  overflow: hidden;
 }
 
 .tabbed-set blockquote,
@@ -169,6 +178,7 @@ nav.md-tabs {
  {
     border: none !important;
     margin: 0 !important;
+    border-radius: 0;
 }
 
 .font-controls {
@@ -439,8 +449,14 @@ nav.md-tabs {
   overflow: auto;
 }
 
-.mt-0 .highlighttable {
-  margin-top: 0;
+.mt-0 .highlighttable,
+.mt-0 .filename,
+.mt-0 {
+  margin-top: 0 !important;
+}
+
+.mb-0 pre {
+  margin-bottom: 0 !important;
 }
 
 .aws-button {
@@ -460,4 +476,105 @@ nav.md-tabs {
 
 .md-content figure img {
   border: 2px solid var(--md-primary-fg-color);
+}
+
+.border-img {
+  border: 2px solid var(--md-default-fg-color--lightest);
+  background: var(--md-default-fg-color--lightest);
+}
+
+.grid.cards.nh > ul > li:hover {
+    box-shadow: none;
+    border-color: var(--md-default-fg-color--lightest);
+}
+
+
+/* Disparadores */
+a[data-dialog="iframe"] {
+  text-decoration-style: dotted;
+  text-underline-offset: 0.2em;
+  cursor: zoom-in;
+}
+
+/* Diálogo */
+.content-dialog {
+  width: min(1100px, 94vw);
+  max-width: none;
+  max-height: 92vh;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 0.5rem;
+  background: var(--md-default-bg-color);
+  color: var(--md-default-fg-color);
+  box-shadow: 0 1rem 4rem rgb(0 0 0 / 25%);
+}
+
+.content-dialog::backdrop {
+  background: rgb(0 0 0 / 75%);
+  backdrop-filter: blur(3px);
+}
+
+.content-dialog__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--md-default-fg-color--lightest);
+}
+
+.content-dialog__title {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.content-dialog__close {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 0;
+  border-radius: 0.25rem;
+  background: transparent;
+  color: var(--md-default-fg-color);
+  cursor: pointer;
+}
+
+.content-dialog__close:hover {
+  background: var(--md-default-fg-color--lightest);
+}
+
+.content-dialog__body {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #000;
+}
+
+.content-dialog__body iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+body.dialog-open {
+  overflow: hidden;
+}
+
+@media (max-width: 600px) {
+  .content-dialog {
+    width: 96vw;
+    max-height: 85vh;
+  }
+}
+
+
+details .tabbed-set details {
+    border: 0;
+    border-radius: 0;
+    margin: 0 1px;
 }
