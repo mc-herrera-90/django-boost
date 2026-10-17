@@ -11,6 +11,7 @@ extra_javascript:
   - assets/js/extras.js
   - https://unpkg.com/tablesort@5.3.0/dist/tablesort.min.js
   - assets/js/tablesort.js
+  - assets/js/dialogs.js
 
 theme:
   name: material
@@ -52,6 +53,7 @@ theme:
     - navigation.indexes
     - content.code.copy
     - content.code.annotate
+    - content.code.select
 
 nav:
   - "Inicio Rápido":
@@ -62,6 +64,10 @@ nav:
       - setup/ejecutar-servidor-de-desarrollo.md
   - Blog:
       - blog/index.md
+
+  - Proyecto SGR:
+      - "sgr/index.md"
+      - "sgr/activities/index.md" 
 
 markdown_extensions:
   - abbr
