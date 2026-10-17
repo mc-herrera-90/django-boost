@@ -85,37 +85,37 @@ En `base.html`, heredamos la plantilla original del administrador y sobrescribim
 
 ???+ info "Variables para cada modo"
 
-  Dentro de `:root` se definen las variables utilizadas por defecto. Para controlar los colores de cada tema, Django también permite sobrescribir las variables dentro de los selectores correspondientes al modo claro y oscuro.
+    Dentro de `:root` se definen las variables utilizadas por defecto. Para controlar los colores de cada tema, Django también permite sobrescribir las variables dentro de los selectores correspondientes al modo claro y oscuro.
 
-{% raw %}
+    {% raw %}
 
-```html title="core/templates/admin/base.html" linenums="1"
-{% extends "admin/base.html" %}
+    ```html title="core/templates/admin/base.html" linenums="1"
+    {% extends "admin/base.html" %}
 
-{% block extrastyle %}
+    {% block extrastyle %}
 
-  <style>
+      <style>
 
-    :root {
-      /* Variables generales */
-      --primary: #f0c;
-      --secondary: #d09;
-    }
-    html[data-theme="light"] {
-      /* Variables del modo claro */
-        --primary: rgb(49, 98, 233);
-        --secondary: rgb(77, 62, 207);
-    }
-    html[data-theme="dark"] {
-      /* Variables del modo oscuro */
-      --primary: rgb(12, 188, 6);
-      --secondary: rgb(5, 111, 37);
-    }
-  </style>
-{% endblock %}
-```
+        :root {
+          /* Variables generales */
+          --primary: #f0c;
+          --secondary: #d09;
+        }
+        html[data-theme="light"] {
+          /* Variables del modo claro */
+            --primary: rgb(49, 98, 233);
+            --secondary: rgb(77, 62, 207);
+        }
+        html[data-theme="dark"] {
+          /* Variables del modo oscuro */
+          --primary: rgb(12, 188, 6);
+          --secondary: rgb(5, 111, 37);
+        }
+      </style>
+    {% endblock %}
+    ```
 
-{% endraw %}
+    {% endraw %}
 
 **La idea importante:** `:root` actúa como conjunto de valores generales o predeterminados, mientras que `html[data-theme="light"]` y `html[data-theme="dark"]` permiten establecer valores específicos para cada tema.
 
