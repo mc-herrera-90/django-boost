@@ -10,42 +10,42 @@
 
     __Puedes tener varios entornos, sin tener conflictos entre ellos__
 
-- :material-rocket-launch-outline: &nbsp; __[Instalar Django][instalacion]__
+- :material-rocket-launch-outline: &nbsp; [**2. Instalar Django**][instalacion]
 
     ---
 
-    Guía paso a paso de cómo instalar Django en Windows o Linux (Ubuntu o Debian) para empezar a desarrollar con este framework de Python. No olvides apoyarte con la [documentación oficial](https://www.djangoproject.com/).
+    Instalación de Django dentro del entorno virtual configurado. Permite instalar la última versión estable o especificar una versión en concreto según las necesidades del desarrollo. No olvides apoyarte con la [documentación oficial](https://djangoproject.com).
 
     ---
 
-    __Asegurate de tener Python instalado antes de seguir la guía__
+    __Asegurate de tener el entorno virtual activado antes de instalar__
 
--   :material-application-braces-outline: &nbsp; __[Crear una aplicación][crear_aplicacion]__
-
-    ---
-
-    Django nos permite crear aplicaciones web de forma rápida y sencilla, crea automáticamente una estructura que lo hace fácil de trabajar y es muy versátil. Se pueden crear varias aplicaciones o apps dentro de un proyecto.
+-   :material-application-braces-outline: &nbsp; [**3. Generar un nuevo proyecto**][generar_proyecto]
 
     ---
 
-    __En cada proyecto de Django, es requerido tener al menos una aplicación__
-
--   :material-application-cog-outline: &nbsp; __[Django Views][django-views]__
+    Django permite crear rápidamente una estructura inicial para el proyecto, facilitando el desarrollo y la organización del código. Además, ofrece flexibilidad para integrar múltiples aplicaciones o apps dentro de un mismo proyecto.
 
     ---
 
-    Las vistas de Django son funciones de Python que toman solicitudes http y devuelven una respuesta http, como documentos HTML.
+    **En cada proyecto, es recomendado usar el comando** [`django-admin startproject`](https://docs.djangoproject.com/en/6.1/ref/django-admin/#startproject){:target='_blank'}
 
-	Las vistas son como los **controladores** en el caso de MVC.
+-   :material-server: &nbsp; [**4. Lanzar Servidor de Desarrollo**][run_server]
 
     ---
 
-    __Una views es un lugar donde ponemos la lógica de la aplicación__
+    El servidor de desarrollo de Django permite ejecutar el proyecto localmente y comprobar su funcionamiento desde el navegador.
+
+    Es una herramienta integrada que facilita las pruebas durante el desarrollo.
+
+    ---
+
+    **El servidor permite ejecutar y probar el proyecto localmente.**
 
 
 </div>
 
   [EntornoVirtual]: setup/configurar-entorno-virtual.md
   [instalacion]: setup/instalar-django.md
-  [crear_aplicacion]: crear-nueva-app.md
-  [django-views]: configurar-una-vista.md
+  [generar_proyecto]: setup/generar-nuevo-proyecto.md
+  [run_server]: setup/ejecutar-servidor-de-desarrollo.md
