@@ -1,8 +1,9 @@
 # Reglas de Markdownlint:
 # https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md
 
-MD022: true
+MD010: false
 MD013: false
+MD022: true
 MD041: false
 
 MD049:
@@ -10,6 +11,9 @@ MD049:
 
 MD050:
   style: asterisk
+
+MD060:
+  style: compact
 
 MD046: false
 MD033:
