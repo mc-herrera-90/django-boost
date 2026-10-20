@@ -7,30 +7,6 @@
     pip3 install --user pipenv
     ```
 
-    ???+ info "Información"
-        Al instalar Pipenv con la opción `--user`, es posible que deba agregar el directorio de los ejecutables al `PATH` para poder utilizar el comando `pipenv` desde la terminal.
-
-        En Linux y macOS, se puede consultar la ruta de instalación con:
-
-        ```bash title="Terminal"
-        python3 -m site --user-base
-        # Output: /Users/mcherrera/Library/Python/3.14
-        ```
-
-        Normalmente, los ejecutables se encuentran en el directorio `bin` dentro de esa ruta. Para agregarlo al `PATH` en Bash o Zsh, ejecute:
-
-        ```bash title="Terminal"
-        echo 'export PATH="$HOME/Library/Python/3.9/bin:$PATH"' >> ~/.bashrc
-        source ~/.bashrc # o .zshrc si usas zsh
-        ```
-
-        Finalmente, comprobamos que Pipenv esté disponible:
-
-        ```bash title="Terminal"
-        pipenv --version
-        # Output: pipenv, version 2025.0.4
-        ```
-
 === ":fontawesome-brands-apple: macOS"
 
     ```bash
@@ -51,6 +27,30 @@
 
     ```bash
     sudo dnf install pipenv
+    ```
+
+???- success "Agregar al PATH para acceder al comando"
+    Al instalar Pipenv con la opción `--user`, es posible que deba agregar el directorio de los ejecutables al `PATH` para poder utilizar el comando `pipenv` desde la terminal.
+
+    En Linux y macOS, se puede consultar la ruta de instalación con:
+
+    ```bash title="Terminal" hl_lines="2"
+    python3 -m site --user-base
+    # Output: /Users/mcherrera/Library/Python/3.14
+    ```
+
+    Normalmente, los ejecutables se encuentran en el directorio `bin` dentro de esa ruta. Para agregarlo al `PATH` en Bash o Zsh, ejecuta lo siguiente:
+
+    ```bash title="Terminal" hl_lines="1"
+    echo 'export PATH="$HOME/Library/Python/3.9/bin:$PATH"' >> ~/.bashrc
+    source ~/.bashrc # o .zshrc si usas zsh
+    ```
+
+    Finalmente, comprobamos que Pipenv esté disponible:
+
+    ```bash title="Terminal"
+    pipenv --version
+    # Output: pipenv, version 2025.0.4
     ```
 
 ???- abstract "Administrar entornos con Pipenv"
@@ -124,7 +124,7 @@
         pipenv --rm
         ```
 
-???+ abstract "Administrar dependencias con Pipenv"
+???- tip "Administrar dependencias con Pipenv"
 
     **1. Instalar un paquete (se registrará en el archivo `Pipfile` y `Pipfile.lock`)**
 

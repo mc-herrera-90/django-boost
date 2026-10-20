@@ -81,7 +81,3 @@ En caso de no tener instalado `venv`, puedes usar los siguientes comandos:
 Para gestionar un entorno virtual usando el paquete `venv`, ubicate en la carpeta donde quieres configurarlo y sigue los pasos según tu plataforma:
 
 --8<-- "snippets/commands/python-venv.md"
-
-!!! info "Nombre del entorno"
-
-    Se recomienda utilizar `venv` o `.venv` como nombre del entorno virtual. La opción `.venv` es habitual porque se considera una carpeta oculta en sistemas Unix y ayuda a mantenerla separada del código del proyecto.
