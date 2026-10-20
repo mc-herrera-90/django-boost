@@ -47,6 +47,7 @@ theme:
     - navigation.tabs
     - navigation.instant # navigation.instant.prefetch (pendiente por problemas)
     - navigation.instant.progress
+    - navigation.instant.preview
     - navigation.top
     - navigation.footer
     - navigation.tracking
