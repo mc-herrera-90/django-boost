@@ -1,10 +1,10 @@
 === ":octicons-download-16: Instalar última versión disponible"
 
-    ```plaintext
+    ```bash hl_lines="1"
     (.venv) pip install django
     ```
 
-    ```{.plaintext .no-copy .mt-0 title="Output" hl_lines="2 4 6" }
+    ```{.plaintext .no-copy .mt-0 title="Output" }
     Collecting django
       Downloading django-6.1.2-py3-none-any.whl.metadata (3.9 kB)
     Collecting asgiref>=3.9.1 (from django)
@@ -25,11 +25,11 @@
 
 === ":octicons-tag-16: Instalar versión específica"
 
-    ```plaintext
+    ```bash hl_lines="1"
     (.venv) pip install django==3.2
     ```
 
-    ```{.plaintext .no-copy .mt-0 title="Output" hl_lines="2 4 6 8" }
+    ```{.plaintext .no-copy .mt-0 title="Output" }
     Collecting django==3.2
       Downloading Django-3.2-py3-none-any.whl.metadata (3.9 kB)
     Collecting asgiref<4,>=3.3.2 (from django==3.2)

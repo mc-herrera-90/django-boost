@@ -1,9 +1,8 @@
-???+ abstract "Administrar entornos con venv"
+???- abstract "Administrar entornos con venv"
 
     === ":fontawesome-brands-windows: Windows"
 
         **1. Crear Entorno Virtual**
-
 
         ```{ .powershell .cmd .mt-0 }
         python -m venv .venv
@@ -52,3 +51,6 @@
         ```bash title="Terminal"
         python3 -m venv --clear .venv
         ```
+
+
+    > Se recomienda utilizar `venv` o `.venv` como nombre del entorno virtual. La opción `.venv` es habitual porque se considera una carpeta oculta en sistemas Unix y ayuda a mantenerla separada del código del proyecto.
