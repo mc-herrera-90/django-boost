@@ -1,5 +1,5 @@
 site_name: Django Boost
-site_url: https://mcherrera.dev/django-boost
+site_url: https://django-boost.mcherrera.dev
 
 extra_css:
   - assets/css/nerd-font.css
