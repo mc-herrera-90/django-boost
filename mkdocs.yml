@@ -65,6 +65,7 @@ nav:
 
   - "Primeros pasos":
       - intro/aplicaciones.md
+      - intro/modelos.md
 
   - Blog:
       - blog/index.md
