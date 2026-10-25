@@ -25,6 +25,8 @@ Cuando necesitas incorporar una nueva funcionalidad al proyecto, puedes crear un
 
 Por ejemplo, para desarrollar un módulo que gestione productos, ejecuta el siguiente comando desde el directorio que contiene el archivo :octicons-file-code-16: `manage.py`:
 
+<div id="comando-startapp"></div>
+
 ```bash title="Terminal"
 (.venv) python manage.py startapp products
 ```
