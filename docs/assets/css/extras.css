@@ -389,6 +389,10 @@ nav.md-tabs {
 
 }
 
+details.example summary::after {
+  color: var(--md-accent-fg-color) !important;
+}
+
 .md-typeset .example>.admonition-title,
 .md-typeset .example>summary {
   background-color: #00bfa51a
