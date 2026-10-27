@@ -21,7 +21,7 @@ Aunque cada aplicación tiene una responsabilidad propia, todas pueden integrars
 
 ## Crear una aplicación
 
-Cuando necesitas incorporar una nueva funcionalidad al proyecto, puedes crear una aplicación utilizando el comando `startapp`, una herramienta que genera automáticamente la estructura básica de archivos y directorios.
+Cuando necesitas incorporar una nueva funcionalidad al proyecto, puedes crear una aplicación utilizando el comando :octicons-terminal-16: `startapp`, una herramienta que genera automáticamente la estructura básica de archivos y directorios.
 
 Por ejemplo, para desarrollar un módulo que gestione productos, ejecuta el siguiente comando desde el directorio que contiene el archivo :octicons-file-code-16: `manage.py`:
 

@@ -3,15 +3,19 @@ title: "Modelos"
 icon: material/table
 ---
 
-# Modelos en Django
+# Introducción a los Modelos en Django
 
 Los modelos son un componente fundamental de las aplicaciones en Django, ya que permiten definir y organizar los datos que estas gestionan. Esto gracias a las clases de Python y el ORM ( *Object-Relational Mapping* ) integrado, establecen la estructura de la información y facilitan su interacción con la base de datos.
 
+En resumen, los modelos de Django son clases que representan la estructura de los datos de una aplicación y permiten interactuar con la base de datos mediante el ORM de Django, sin necesidad de escribir SQL directamente.
+
 ## ¿Dónde se definen los Modelos?
 
-Los modelos se definen en el archivo :octicons-file-code-16: `models.py` de una aplicación. Se implementan como subclases de [`django.db.models.Model`](https://github.com/django/django/blob/stable/6.1.x/django/db/models/base.py#L501-L615){:target='_blank'} y pueden incluir campos, métodos, metadatos y **reglas de validación** de los datos antes de guardarlos en la base de datos.
+Los modelos se definen en el archivo :octicons-file-code-16: `models.py` de una aplicación. Se implementan como subclases de [`django.db.models.Model`](https://github.com/django/django/blob/stable/6.1.x/django/db/models/base.py#L501-L615){:target='_blank'} y pueden incluir **campos**, **métodos**, **metadatos** y **reglas de validación** de los datos antes de guardarlos en la base de datos.
 
 Por ejemplo, dentro de la aplicación :octicons-file-directory-16: `products`, podemos definir un modelo a través de una clase :octicons-package-16: `Product` en el archivo :octicons-file-code-16: `models.py` para representar los productos y sus respectivos campos:
+
+<div id="modelo-product"></div>
 
 ```py title="products/models.py"
 from django.db import models
@@ -61,9 +65,9 @@ from django.db import models
 class Product(models.Model):
 
     # Campos
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=50)
     category = models.CharField(max_length=50)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    price = models.IntegerField()
     stock = models.PositiveIntegerField(default=0)
 
     def __str__(self):
