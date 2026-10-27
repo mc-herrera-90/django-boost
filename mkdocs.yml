@@ -67,13 +67,17 @@ nav:
       - intro/aplicaciones.md
       - intro/modelos.md
       - intro/vistas.md
+      - intro/formularios.md
 
   - Blog:
       - blog/index.md
 
-  - Proyecto SGR:
-      - "sgr/index.md"
-      - "sgr/activities/index.md" 
+  - Proyectos:
+      "SGR":
+        - "sgr/index.md"
+        - "sgr/activities/index.md" 
+      "Nuam":
+        - "nuam/index.md"
 
 markdown_extensions:
   - abbr
